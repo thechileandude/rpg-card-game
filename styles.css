@@ -3714,3 +3714,39 @@ body:has(#battleScreen:not(.hidden)) .app-shell {
   margin: 0 4px 0 0;
   text-align: right;
 }
+
+#battleScreen .battle-action-row {
+  grid-template-columns: 1fr;
+  gap: 3px;
+}
+
+#battleScreen .battle-action-row .target-panel {
+  padding: 4px 6px;
+}
+
+#battleScreen .battle-action-row .target-detail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 3px;
+}
+
+#battleScreen .battle-action-row .target-detail div {
+  display: block;
+  min-width: 0;
+}
+
+#battleScreen .battle-action-row .target-detail span,
+#battleScreen .battle-action-row .target-detail strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#battleScreen .battle-action-row .ability-bar {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 3px;
+}
+
+#battleScreen .battle-action-row .ability-button {
+  min-height: 62px;
+}
