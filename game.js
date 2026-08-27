@@ -2474,14 +2474,13 @@ function renderUnitCard(unit) {
   const conditions = unitStatuses(unit);
   const target = unitById(unit.targetId);
   const targetHpPct = target ? Math.max(0, (target.hp / target.maxHp) * 100) : 0;
-  const owner = unit.isPlayer ? "You" : unit.team === "ally" ? "Ally" : "Enemy";
   token.innerHTML = `
     <svg class="ultimate-border" viewBox="0 0 100 120" preserveAspectRatio="none" aria-hidden="true">
       <rect class="ultimate-border-track" x="1.5" y="1.5" width="97" height="117" rx="4" pathLength="100"></rect>
       <rect class="ultimate-border-fill" x="1.5" y="1.5" width="97" height="117" rx="4" pathLength="100" style="stroke-dasharray:${ultimatePct} 100"></rect>
     </svg>
     <div class="battle-card-head">
-      <span>${owner}</span>
+      ${unit.isPlayer ? "<span>You</span>" : ""}
       <strong>${art.label}</strong>
       <small>${unit.name}</small>
     </div>
