@@ -1,0 +1,3233 @@
+:root {
+  color-scheme: light;
+  --phone-width: 428px;
+  --phone-height: 926px;
+  --battle-cell-width: 100px;
+  --battle-cell-height: 100px;
+  --battle-gap: 7px;
+  --bg: #efe7d5;
+  --panel: #fbf6ea;
+  --panel-soft: rgba(252, 247, 236, 0.94);
+  --line: #cbb994;
+  --line-bright: #8d7546;
+  --text: #2e2617;
+  --muted: #6f6148;
+  --gold: #9a6f14;
+  --red: #a83228;
+  --green: #2f6f38;
+  --blue: #2a6795;
+  --violet: #63409f;
+  --common: #6a6250;
+  --uncommon: #2c7135;
+  --rare: #26618f;
+  --epic: #6e3aa8;
+  --legendary: #a35f0c;
+}
+
+/* Phone-first lock: the game is authored for the iPhone Pro Max canvas (428x926).
+   Cells are sized so 4 columns + gaps + the battlefield's own padding fit inside
+   the 428px shell, with the taller cells using the vertical space the battle
+   layout reclaimed. Narrower handsets step down at the 400px breakpoint below. */
+:root {
+  --battle-cell-width: 96px;
+  --battle-cell-height: 120px;
+  --battle-gap: 5px;
+}
+
+html,
+body {
+  min-height: var(--phone-height);
+}
+
+.app-shell {
+  min-height: var(--phone-height);
+  padding: 6px;
+}
+
+.screen {
+  min-height: calc(var(--phone-height) - 12px);
+}
+
+#roleScreen {
+  padding: 28px 20px;
+}
+
+#roleScreen .screen-header {
+  margin-bottom: 20px;
+}
+
+#roleScreen h1 {
+  font-size: 39px;
+  line-height: 1.05;
+}
+
+.role-choice-screen {
+  gap: 14px;
+}
+
+.role-enemy-preview h2 {
+  font-size: 12px;
+}
+
+.role-enemy-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.role-enemy-card {
+  min-height: 54px;
+  padding: 8px;
+  border-radius: 14px;
+}
+
+.role-enemy-card > span {
+  font-size: 15px;
+}
+
+.role-enemy-card strong {
+  font-size: 13px;
+}
+
+.role-enemy-card small {
+  font-size: 11px;
+}
+
+.role-choice-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.role-choice-card {
+  min-height: 164px;
+  padding: 10px 8px;
+  border: 2px solid #cdbaa2;
+  border-radius: 18px;
+  background: #f9f8f6;
+  color: #2e251a;
+}
+
+.role-choice-title {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.role-choice-title span {
+  font-size: 20px;
+}
+
+.role-choice-title strong {
+  font-size: 19px;
+}
+
+.role-choice-rule {
+  height: 2px;
+  margin: 8px 0 7px;
+  background: #f7f6f4;
+}
+
+.role-choice-card ul {
+  gap: 2px;
+  font-size: 10px;
+  line-height: 1.18;
+}
+
+.battle-screen {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: calc(var(--phone-height) - 12px);
+}
+
+.battle-layout,
+.selection-layout,
+.inventory-layout {
+  grid-template-columns: 1fr;
+}
+
+.combat-topbar {
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.combat-topbar > div:first-child {
+  min-width: 0;
+}
+
+.combat-topbar h1 {
+  overflow: hidden;
+  font-size: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.combat-topbar .topbar-actions {
+  flex: 0 0 164px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.formation-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  overflow-x: hidden;
+}
+
+.formation-cell,
+.empty-cell {
+  height: 124px;
+  min-height: 0;
+}
+
+.battlefield {
+  width: 100%;
+  justify-content: center;
+  padding: 10px 8px;
+}
+
+.cell,
+.unit-card {
+  width: var(--battle-cell-width);
+  min-width: var(--battle-cell-width);
+  height: var(--battle-cell-height);
+  min-height: var(--battle-cell-height);
+}
+
+.field-wrap {
+  display: grid;
+  align-content: center;
+  min-height: 344px;
+  overflow: hidden;
+}
+
+.side-panel {
+  gap: 5px;
+  padding: 6px;
+  align-self: end;
+}
+
+.loot-grid {
+  grid-template-columns: 1fr;
+}
+
+#roleScreen .role-formation-cell .role-choice-title strong {
+  overflow: hidden;
+  max-width: 100%;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+#roleScreen .role-formation-cell .role-choice-card {
+  min-height: 164px;
+  padding: 10px 8px;
+  border: 2px solid #cdbaa2;
+  border-radius: 18px;
+  background: #f9f8f6;
+  color: #2e251a;
+}
+
+#roleScreen .role-formation-cell .role-choice-card.selected {
+  border-color: #cdbaa2;
+}
+
+#roleScreen .role-formation-cell .role-choice-title {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+#roleScreen .role-formation-cell .role-choice-title span {
+  font-size: 20px;
+}
+
+#roleScreen .role-formation-cell .role-choice-title strong {
+  font-size: 19px;
+}
+
+#roleScreen .role-formation-cell .role-choice-rule {
+  height: 2px;
+  margin: 8px 0 7px;
+  background: #f7f6f4;
+}
+
+#roleScreen .role-formation-cell .role-choice-card ul {
+  font-size: 10px;
+  line-height: 1.18;
+}
+
+#roleScreen .role-choice-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#roleScreen .role-choice-card {
+  min-height: 300px;
+  max-height: 300px;
+  padding: 14px 10px;
+  border-radius: 18px;
+  align-content: start;
+}
+
+#roleScreen .role-choice-title {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+#roleScreen .role-choice-title span {
+  font-size: 34px;
+}
+
+#roleScreen .role-choice-title strong {
+  font-size: 24px;
+}
+
+#roleScreen .role-choice-card ul {
+  font-size: 12px;
+  line-height: 1.18;
+}
+
+/* Reference pass: player choice cards read like collectible cards. */
+#roleScreen .role-formation-cell .role-choice-card {
+  min-height: 164px;
+  padding: 10px 8px;
+  border: 2px solid #cdbaa2;
+  border-radius: 18px;
+  background: #f9f8f6;
+  color: #2e251a;
+}
+
+#roleScreen .role-formation-cell .role-choice-card.selected {
+  border-color: #cdbaa2;
+}
+
+#roleScreen .role-formation-cell .role-choice-title {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+#roleScreen .role-formation-cell .role-choice-title span {
+  font-size: 20px;
+}
+
+#roleScreen .role-formation-cell .role-choice-title strong {
+  font-size: 19px;
+}
+
+#roleScreen .role-formation-cell .role-choice-rule {
+  height: 2px;
+  margin: 8px 0 7px;
+  background: #f7f6f4;
+}
+
+#roleScreen .role-formation-cell .role-choice-card ul {
+  font-size: 10px;
+  line-height: 1.18;
+}
+
+#roleScreen .unit-card-owner {
+  margin-bottom: 4px;
+  color: #413525;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+#roleScreen .role-formation-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+#roleScreen .role-formation-cell {
+  min-height: 132px;
+  min-height: 0;
+  height: auto;
+}
+
+#roleScreen .role-empty-cell {
+  width: 100%;
+  height: 100%;
+  min-height: 132px;
+  border: 1px dashed #cdbaa2;
+  border-radius: 14px;
+}
+
+#roleScreen .role-formation-cell .role-choice-card,
+#roleScreen .role-formation-cell .role-enemy-card {
+  width: 100%;
+  height: 100%;
+  min-height: 132px;
+  max-height: 132px;
+}
+
+#roleScreen .role-formation-cell .role-choice-card {
+  padding: 8px 6px;
+}
+
+#roleScreen .role-formation-cell .role-choice-title span {
+  font-size: 22px;
+}
+
+#roleScreen .role-formation-cell .role-choice-title strong {
+  font-size: 18px;
+}
+
+#roleScreen .role-formation-cell .role-choice-rule {
+  margin: 7px 0 6px;
+}
+
+#roleScreen .role-formation-cell .role-choice-card ul {
+  font-size: 9px;
+  line-height: 1.12;
+}
+
+#roleScreen .role-formation-cell .role-enemy-card {
+  padding: 7px;
+}
+
+#roleScreen .role-formation-cell .role-enemy-card ul {
+  font-size: 8px;
+}
+
+#roleScreen .role-choice-title span,
+#roleScreen .role-enemy-title > span {
+  display: none;
+}
+
+#roleScreen .role-enemy-card {
+  align-content: start;
+  grid-template-columns: 1fr;
+  min-height: 104px;
+  padding: 9px;
+  border-radius: 16px;
+}
+
+#roleScreen .role-enemy-title {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px;
+  align-items: start;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #a63f3f;
+}
+
+#roleScreen .role-enemy-card ul {
+  display: grid;
+  gap: 2px;
+  margin: 7px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 10px;
+  line-height: 1.12;
+}
+
+/* Make the player team choices read as cards, not wide list rows. */
+.role-choice-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.role-choice-card {
+  min-height: 300px;
+  max-height: 300px;
+  padding: 14px 10px;
+  border-radius: 18px;
+  align-content: start;
+}
+
+.role-choice-title {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.role-choice-title span {
+  font-size: 34px;
+}
+
+.role-choice-title strong {
+  font-size: 24px;
+}
+
+.role-choice-card ul {
+  font-size: 12px;
+  line-height: 1.18;
+}
+
+/* Make the player team choices read as cards, not wide list rows. */
+.role-choice-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.role-choice-card {
+  min-height: 300px;
+  max-height: 300px;
+  padding: 14px 10px;
+  border-radius: 18px;
+  align-content: start;
+}
+
+.role-choice-title {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.role-choice-title span {
+  font-size: 34px;
+}
+
+.role-choice-title strong {
+  font-size: 24px;
+}
+
+.role-choice-card ul {
+  font-size: 12px;
+  line-height: 1.18;
+}
+
+/* Conservative role screen pass: card layout, original game mood. */
+#roleScreen {
+  color: var(--text);
+  background: transparent;
+}
+
+#roleScreen h1 {
+  color: var(--text);
+}
+
+.role-enemy-preview h2 {
+  display: block !important;
+  color: var(--muted);
+}
+
+.role-enemy-card {
+  border-color: rgba(186, 55, 44, 0.44);
+  background: rgba(222, 191, 186, 0.9);
+  color: var(--text);
+}
+
+.role-enemy-card small {
+  color: var(--muted);
+}
+
+.role-choice-card {
+  border-color: var(--line);
+  background:
+    linear-gradient(180deg, rgba(241, 238, 226, 0.08), rgba(233, 223, 201, 0.34)),
+    var(--panel-soft);
+  color: var(--text);
+}
+
+.role-choice-card:hover,
+.role-choice-card.selected {
+  border-color: var(--gold);
+  box-shadow: 0 8px 20px rgba(62, 48, 30, 0.18);
+}
+
+.role-choice-rule {
+  background: rgba(241, 238, 226, 0.14);
+}
+
+/* Light canvas preference. */
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background: var(--bg);
+}
+
+.app-shell {
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(151, 189, 216, 0.14), transparent 26rem),
+    linear-gradient(135deg, #f2ead8, #ece2cc 55%, #f4eedd);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button {
+  font: inherit;
+}
+
+.app-shell {
+  width: min(var(--phone-width), 100%);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 14px;
+  margin: 0 auto;
+}
+
+.screen {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#roleScreen {
+  color: var(--text);
+  background: var(--bg);
+}
+
+#roleScreen .screen-header {
+  align-items: start;
+}
+
+#roleScreen .eyebrow,
+#roleScreen .character-sheet-strip,
+#roleScreen > section:not(.character-sheet-strip) h2,
+#openInventoryFromRole {
+  display: none;
+}
+
+#roleScreen h1 {
+  color: #2e251a;
+}
+
+.screen-header,
+.combat-topbar,
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 26px;
+}
+
+h2 {
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.selection-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.kit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.kit-grid.six {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.formation-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(104px, 1fr));
+  gap: 6px;
+  overflow-x: auto;
+}
+
+.role-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.role-choice-screen {
+  display: grid;
+  gap: 16px;
+}
+
+.role-enemy-preview {
+  display: grid;
+  gap: 8px;
+}
+
+.role-enemy-preview h2 {
+  margin: 0;
+  color: #413525;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.role-enemy-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.role-enemy-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  min-height: 58px;
+  padding: 10px;
+  border: 2px solid #a63f3f;
+  border-radius: 14px;
+  background: #fefbfb;
+  color: #2e251a;
+}
+
+.role-enemy-card > span {
+  color: #972b2b;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.role-enemy-card strong,
+.role-enemy-card small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.role-enemy-card strong {
+  font-size: 15px;
+  line-height: 1.1;
+}
+
+.role-enemy-card small {
+  color: #413525;
+  font-size: 12px;
+}
+
+.role-choice-card {
+  display: grid;
+  align-content: start;
+  min-height: 260px;
+  padding: 24px 26px;
+  border: 2px solid #cdbaa2;
+  border-radius: 20px;
+  background: #f9f8f6;
+  color: #2e251a;
+  cursor: pointer;
+  text-align: left;
+}
+
+.role-choice-card:hover,
+.role-choice-card.selected {
+  border-color: #cdbaa2;
+  box-shadow: 0 8px 20px rgba(62, 48, 30, 0.12);
+}
+
+.role-choice-title {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  min-width: 0;
+}
+
+.role-choice-title span {
+  flex: 0 0 auto;
+  font-size: 38px;
+  line-height: 1;
+}
+
+.role-choice-title strong {
+  overflow-wrap: anywhere;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.05;
+}
+
+.role-choice-rule {
+  height: 2px;
+  margin: 20px 0 18px;
+  background: #f7f6f4;
+}
+
+.role-choice-card ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 28px;
+  line-height: 1.16;
+}
+
+.formation-cell {
+  height: 154px;
+  min-height: 0;
+}
+
+.formation-card {
+  width: 100%;
+  height: 100%;
+}
+
+.ally-preview-card {
+  border-left: 5px solid var(--blue);
+}
+
+.enemy-preview-card {
+  border-left: 5px solid var(--red);
+}
+
+.empty-cell {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  place-items: center;
+  border: 1px dashed rgba(205, 186, 162, 0.34);
+  color: rgba(145, 127, 48, 0.36);
+  background: rgba(233, 223, 201, 0.18);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.unit-card.selected {
+  background: rgba(222, 210, 186, 0.92);
+}
+
+.unit-card.incoming-cc {
+  border-color: var(--violet);
+  outline: 2px solid rgba(99, 64, 159, 0.55);
+  outline-offset: -2px;
+  background: rgba(238, 231, 246, 0.96);
+}
+
+.unit-card.casting-cc {
+  border-color: var(--violet);
+  box-shadow: inset 0 0 0 2px rgba(99, 64, 159, 0.55);
+}
+
+.stat-line {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.base-number {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.bonus-number {
+  color: var(--green);
+  font-weight: 900;
+}
+
+.ability-list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ability-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px;
+  padding: 3px;
+  background: rgba(233, 223, 201, 0.42);
+  font-size: 8px;
+  line-height: 1.05;
+}
+
+.ability-list strong,
+.ability-list span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.loot-card,
+.unit-card,
+.slot,
+.collection-card,
+.target-panel,
+.side-panel,
+.modal {
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+  box-shadow: 0 12px 30px rgba(62, 48, 30, 0.18);
+}
+
+.primary-button,
+.icon-text-button,
+.ability-button,
+.collection-card button {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  background: #efece9;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.primary-button {
+  padding: 0 18px;
+  border-color: #ad8639;
+  background: #ded0ba;
+  font-weight: 800;
+}
+
+.icon-text-button,
+.collection-card button {
+  padding: 0 12px;
+}
+
+.primary-button:hover,
+.icon-text-button:hover,
+.ability-button:hover,
+.collection-card button:hover {
+  border-color: var(--gold);
+}
+
+.battle-screen {
+  width: 100%;
+}
+
+.battle-layout {
+  display: grid;
+  grid-template-columns: minmax(500px, 1fr) 280px;
+  gap: 10px;
+  align-items: start;
+}
+
+.field-wrap {
+  position: relative;
+  min-height: 508px;
+  overflow: hidden;
+  border: 1px solid #cdbaa2;
+  background:
+    linear-gradient(90deg, rgba(120, 96, 58, 0.10) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(120, 96, 58, 0.09) 1px, transparent 1px),
+    #f3ecdb;
+  background-size: calc(var(--battle-cell-width) + var(--battle-gap)) calc(var(--battle-cell-height) + var(--battle-gap));
+}
+
+.battlefield {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-rows: repeat(4, var(--battle-cell-height));
+  grid-template-columns: repeat(4, var(--battle-cell-width));
+  gap: var(--battle-gap);
+  width: max-content;
+  max-width: 100%;
+  padding: 12px 10px;
+}
+
+.target-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.target-lines path {
+  fill: none;
+  stroke: rgba(187, 141, 27, 0.62);
+  stroke-width: 3;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.target-lines path.bulwark-line {
+  stroke: #0093d6;
+  stroke-width: 5;
+  stroke-dasharray: 10 4;
+}
+
+.target-lines path.bulwark-line-glow {
+  stroke: rgba(43, 117, 172, 0.34);
+  stroke-width: 12;
+}
+
+.target-lines path.ally-healer-line {
+  stroke: rgba(48, 166, 67, 0.42);
+  stroke-width: 3;
+}
+
+.target-lines path.enemy-healer-line-red {
+  stroke: rgba(173, 51, 41, 0.82);
+  stroke-width: 6;
+}
+
+.target-lines path.enemy-healer-line-green {
+  stroke: rgba(48, 166, 67, 0.96);
+  stroke-width: 3;
+  stroke-dasharray: 8 5;
+}
+
+.target-lines path.healing-grid-pulse-glow {
+  stroke: rgba(54, 225, 83, 0.45);
+  stroke-width: 11px;
+  stroke-linecap: square;
+  filter: blur(2px);
+}
+
+.target-lines path.healing-grid-pulse {
+  stroke: #72ff88;
+  stroke-width: 4px;
+  stroke-linecap: square;
+  filter: drop-shadow(0 0 3px #35d850);
+}
+
+#roleScreen .role-lineups {
+  display: grid;
+  gap: 14px;
+}
+
+#roleScreen .role-lineup-section h2 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+#roleScreen .enemy-lineup {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+#roleScreen .enemy-lineup .role-enemy-card {
+  width: 100%;
+  min-height: 112px;
+  padding: 7px;
+  border-radius: 6px;
+}
+
+#roleScreen .role-option-lineup {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+}
+
+#roleScreen .role-option-lineup .role-choice-card {
+  width: 100%;
+  min-width: 0;
+  min-height: 72px;
+  max-height: 72px;
+  padding: 6px 4px;
+  border-radius: 6px;
+  align-content: center;
+  text-align: center;
+}
+
+#roleScreen .role-option-lineup .role-choice-title strong {
+  font-size: 12px;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+#roleScreen .role-option-lineup .unit-card-owner {
+  font-size: 7px;
+}
+
+#roleScreen .role-option-lineup .role-choice-rule {
+  margin: 5px 0;
+}
+
+#roleScreen .role-option-lineup .role-choice-card ul {
+  gap: 1px;
+  font-size: 7px;
+  line-height: 1.08;
+}
+
+#roleScreen .role-option-lineup .role-choice-card.party-member {
+  border-color: #2a6795;
+  box-shadow: inset 0 0 0 1px rgba(42, 103, 149, 0.28);
+}
+
+#roleScreen .role-option-lineup .role-choice-card.selected {
+  border-color: #9a6a12;
+  box-shadow: inset 0 0 0 2px rgba(154, 106, 18, 0.34);
+}
+
+#roleScreen .role-option-lineup .role-choice-card.not-selected {
+  opacity: 0.36;
+}
+
+#roleScreen .selected-role-kit {
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px solid #cbb994;
+}
+
+#roleScreen .selected-role-kit-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+#roleScreen .selected-role-kit-head span {
+  color: #6f6148;
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+#roleScreen .selected-role-kit-head strong {
+  font-size: 13px;
+}
+
+#roleScreen .selected-character-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  margin-bottom: 5px;
+}
+
+#roleScreen .selected-character-stats > div {
+  min-width: 0;
+  padding: 4px;
+  background: #f3f0e8;
+  border: 1px solid #cbb994;
+  border-radius: 4px;
+}
+
+#roleScreen .selected-character-stats span,
+#roleScreen .selected-character-stats strong {
+  display: block;
+}
+
+#roleScreen .selected-character-stats span {
+  color: #6f6148;
+  font-size: 7px;
+  text-transform: uppercase;
+}
+
+#roleScreen .selected-character-stats strong {
+  margin-top: 1px;
+  font-size: 10px;
+}
+
+#roleScreen .selected-role-auto {
+  margin-bottom: 4px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+#roleScreen .selected-role-abilities {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+
+#roleScreen .selected-role-abilities > div {
+  min-width: 0;
+  min-height: 56px;
+  padding: 4px;
+  background: #f9f8f6;
+  border: 1px solid #cbb994;
+  border-radius: 4px;
+}
+
+#roleScreen .selected-role-abilities strong,
+#roleScreen .selected-role-abilities small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+#roleScreen .selected-role-abilities strong {
+  font-size: 9px;
+  line-height: 1.05;
+}
+
+#roleScreen .selected-role-passives {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  margin-top: 5px;
+}
+
+#roleScreen .selected-role-passives > div {
+  min-width: 0;
+  min-height: 46px;
+  padding: 4px;
+  background: #f3f0e8;
+  border: 1px solid #b9a57c;
+  border-radius: 4px;
+}
+
+#roleScreen .selected-role-passives span,
+#roleScreen .selected-role-passives strong,
+#roleScreen .selected-role-passives small {
+  display: block;
+}
+
+#roleScreen .selected-role-passives span {
+  color: #7d5410;
+  font-size: 7px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+#roleScreen .selected-role-passives strong {
+  margin-top: 1px;
+  font-size: 9px;
+}
+
+#roleScreen .selected-role-passives small {
+  margin-top: 2px;
+  color: #6f6148;
+  font-size: 7px;
+  line-height: 1.05;
+}
+
+#roleScreen .selected-role-abilities small {
+  margin-top: 2px;
+  color: #6f6148;
+  font-size: 7px;
+  line-height: 1.05;
+}
+
+.cell {
+  position: relative;
+  min-width: var(--battle-cell-width);
+  min-height: var(--battle-cell-height);
+}
+
+.cell.danger-square {
+  background:
+    linear-gradient(0deg, rgba(217, 156, 151, 0.32), rgba(217, 156, 151, 0.08)),
+    rgba(225, 184, 183, 0.42);
+  box-shadow: inset 0 0 0 2px rgba(186, 55, 44, 0.86), 0 0 14px rgba(186, 55, 44, 0.38);
+}
+
+.cell.danger-square::after {
+  content: attr(data-warning);
+  position: absolute;
+  inset: auto 5px 5px;
+  z-index: 3;
+  display: grid;
+  height: 16px;
+  place-items: center;
+  border: 1px solid rgba(230, 147, 0, 0.8);
+  background: linear-gradient(90deg, rgba(238, 202, 139, 0.42) var(--danger-progress), rgba(241, 239, 236, 0.72) var(--danger-progress));
+  color: var(--text);
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.cell.move-square {
+  cursor: pointer;
+  background: rgba(151, 189, 216, 0.14);
+  box-shadow: inset 0 0 0 2px rgba(46, 125, 184, 0.65);
+}
+
+.cell.respawn-square {
+  background:
+    linear-gradient(0deg, rgba(197, 154, 241, 0.24), rgba(197, 154, 241, 0.06)),
+    rgba(204, 186, 222, 0.46);
+  box-shadow: inset 0 0 0 2px rgba(114, 0, 230, 0.72), 0 0 14px rgba(114, 0, 230, 0.26);
+}
+
+.cell.respawn-square::before {
+  content: attr(data-respawn);
+  position: absolute;
+  inset: 8px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border: 1px solid rgba(114, 0, 230, 0.8);
+  background:
+    linear-gradient(0deg, rgba(197, 154, 241, 0.24) calc(100% - var(--respawn-progress)), rgba(241, 239, 236, 0.72) calc(100% - var(--respawn-progress))),
+    rgba(241, 239, 236, 0.74);
+  color: var(--text);
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.unit-card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto;
+  width: var(--battle-cell-width);
+  height: var(--battle-cell-height);
+  padding: 6px;
+  color: var(--text);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.unit-card.dead {
+  opacity: 0.42;
+  filter: grayscale(0.8);
+}
+
+.unit-card.ally {
+  border-left: 5px solid var(--blue);
+}
+
+.unit-card.enemy {
+  border-left: 5px solid var(--red);
+}
+
+.unit-card.player {
+  box-shadow: inset 0 0 0 2px rgba(46, 125, 184, 0.34);
+}
+
+.unit-card.move-selected {
+  outline: 3px solid rgba(46, 125, 184, 0.78);
+  box-shadow: inset 0 0 0 2px rgba(46, 125, 184, 0.52), 0 0 14px rgba(46, 125, 184, 0.38);
+}
+
+.unit-name {
+  overflow: hidden;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.unit-meta,
+.target-readout,
+.bulwark-readout {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.target-readout {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.hp-text {
+  align-self: end;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.hp-bar,
+.cast-track {
+  height: 7px;
+  overflow: hidden;
+  background: rgba(120, 96, 58, 0.14);
+}
+
+.hp-bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), #eae1c8);
+}
+
+.enemy .hp-bar span {
+  background: linear-gradient(90deg, var(--red), #e0b78f);
+}
+
+.cast-track {
+  position: relative;
+  height: 13px;
+}
+
+.cast-track span {
+  display: block;
+  height: 100%;
+  background: rgba(154, 111, 20, 0.45);
+}
+
+.cast-track strong {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0 3px;
+  overflow: hidden;
+  color: #3a2d10;
+  font-size: 8px;
+  line-height: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-shadow: none;
+}
+
+.side-panel {
+  display: grid;
+  gap: 9px;
+  padding: 8px;
+}
+
+.target-panel {
+  padding: 8px;
+}
+
+.target-panel span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.target-panel strong {
+  display: block;
+  margin-top: 3px;
+}
+
+.ability-bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.ability-button {
+  position: relative;
+  min-height: 48px;
+  padding: 5px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.ability-button strong,
+.ability-button small {
+  position: relative;
+  z-index: 2;
+  display: block;
+}
+
+.ability-button small {
+  color: var(--muted);
+}
+
+.ability-button .cooldown-fill {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 0%;
+  background: rgba(242, 240, 237, 0.48);
+}
+
+.ability-button:disabled {
+  color: #342a1d;
+  cursor: default;
+}
+
+.meter-list {
+  display: grid;
+  width: max-content;
+  max-width: 100%;
+  justify-self: start;
+  gap: 0;
+  border: 1px solid rgba(205, 186, 162, 0.9);
+  line-height: 1;
+}
+
+.player-stats-panel {
+  display: grid;
+  gap: 5px;
+  width: max-content;
+  max-width: 100%;
+}
+
+.stat-mini-grid {
+  display: grid;
+  width: max-content;
+  border: 1px solid rgba(205, 186, 162, 0.9);
+  line-height: 1;
+}
+
+.stat-mini-row {
+  display: grid;
+  grid-template-columns: 54px 34px 44px 36px;
+  min-height: 18px;
+  border-bottom: 1px solid rgba(205, 186, 162, 0.72);
+  background: rgba(233, 223, 201, 0.45);
+  font-size: 8px;
+}
+
+.stat-mini-row:last-child {
+  border-bottom: 0;
+}
+
+.stat-mini-head {
+  color: var(--gold);
+  background: rgba(239, 236, 233, 0.95);
+  font-weight: 800;
+}
+
+.stat-mini-row strong,
+.stat-mini-row span {
+  display: grid;
+  align-items: center;
+  min-width: 0;
+  padding: 3px;
+  border-right: 1px solid rgba(205, 186, 162, 0.72);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stat-mini-row span {
+  justify-items: center;
+}
+
+.stat-mini-row span:last-child {
+  border-right: 0;
+  color: var(--text);
+}
+
+.gear-mini-list {
+  display: grid;
+  gap: 2px;
+  max-width: 176px;
+}
+
+.gear-mini-list div {
+  display: grid;
+  grid-template-columns: 45px 1fr;
+  gap: 4px;
+  padding: 3px 4px;
+  border: 1px solid rgba(205, 186, 162, 0.72);
+  background: rgba(233, 223, 201, 0.36);
+  font-size: 8px;
+  line-height: 1.05;
+}
+
+.gear-mini-list strong,
+.gear-mini-list span,
+.gear-mini-list b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gear-mini-list strong {
+  color: var(--gold);
+}
+
+.gear-mini-list b {
+  grid-column: 1 / -1;
+  color: var(--green);
+  font-weight: 800;
+}
+
+.meter-row {
+  display: grid;
+  grid-template-columns: 58px repeat(4, 18px);
+  gap: 0;
+  align-items: center;
+  min-height: 18px;
+  background: rgba(233, 223, 201, 0.45);
+  font-size: 8px;
+  border-bottom: 1px solid rgba(205, 186, 162, 0.72);
+}
+
+.meter-row:last-child {
+  border-bottom: 0;
+}
+
+.meter-head {
+  background: rgba(239, 236, 233, 0.95);
+  color: var(--gold);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.meter-row strong {
+  overflow: hidden;
+  padding: 3px;
+  border-right: 1px solid rgba(205, 186, 162, 0.72);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meter-row span {
+  display: grid;
+  min-height: 18px;
+  place-items: center;
+  border-right: 1px solid rgba(205, 186, 162, 0.72);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.meter-row span:last-child {
+  border-right: 0;
+}
+
+.countdown,
+.result-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  background: rgba(233, 223, 201, 0.42);
+  color: var(--gold);
+  font-size: clamp(56px, 13vw, 132px);
+  font-weight: 900;
+}
+
+.result-overlay {
+  align-content: center;
+  gap: 14px;
+  color: var(--text);
+  font-size: clamp(32px, 7vw, 76px);
+}
+
+.result-overlay button {
+  width: max-content;
+}
+
+.loot-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-items: stretch;
+}
+
+.loot-card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(86px, 1fr) auto auto;
+  min-height: 272px;
+  padding: 8px;
+  border-width: 2px;
+  background:
+    linear-gradient(180deg, rgba(241, 238, 226, 0.08), rgba(233, 223, 201, 0.32)),
+    var(--panel-soft);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.loot-card::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(171, 149, 59, 0.16);
+  pointer-events: none;
+}
+
+.loot-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(62, 48, 30, 0.18), 0 0 18px rgba(62, 48, 30, 0.18);
+}
+
+.card-rarity {
+  position: relative;
+  z-index: 1;
+  padding: 4px 6px;
+  border: 1px solid rgba(171, 149, 59, 0.16);
+  background: rgba(241, 239, 236, 0.58);
+  color: var(--gold);
+  font-size: 9px;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.card-art {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  min-height: 92px;
+  margin: 6px 0;
+  border: 1px solid rgba(171, 149, 59, 0.22);
+  background:
+    linear-gradient(135deg, rgba(224, 200, 143, 0.16), transparent 46%),
+    linear-gradient(315deg, rgba(151, 189, 216, 0.12), transparent 52%),
+    rgba(233, 223, 201, 0.72);
+}
+
+.card-art span {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.card-art strong {
+  color: var(--text);
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.card-body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  min-height: 76px;
+  padding: 6px;
+  border: 1px solid rgba(171, 149, 59, 0.12);
+  background: rgba(233, 223, 201, 0.42);
+}
+
+.card-body h3 {
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.card-rules {
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.card-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 6px;
+  padding: 4px;
+  border: 1px solid rgba(171, 149, 59, 0.12);
+  background: rgba(241, 239, 236, 0.58);
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.loot-card.rarity-common {
+  background:
+    linear-gradient(180deg, rgba(244, 242, 239, 0.12), rgba(233, 223, 201, 0.34)),
+    var(--panel-soft);
+}
+
+.loot-card.rarity-uncommon {
+  background:
+    linear-gradient(180deg, rgba(216, 201, 168, 0.14), rgba(233, 223, 201, 0.34)),
+    var(--panel-soft);
+}
+
+.loot-card.rarity-rare {
+  background:
+    linear-gradient(180deg, rgba(151, 189, 216, 0.16), rgba(233, 223, 201, 0.34)),
+    var(--panel-soft);
+}
+
+.loot-card.rarity-epic {
+  background:
+    linear-gradient(180deg, rgba(197, 154, 241, 0.17), rgba(233, 223, 201, 0.34)),
+    var(--panel-soft);
+}
+
+.loot-card.rarity-legendary {
+  background:
+    linear-gradient(180deg, rgba(224, 200, 143, 0.18), rgba(233, 223, 201, 0.34)),
+    var(--panel-soft);
+}
+
+.loot-card {
+  cursor: pointer;
+}
+
+.rarity-common {
+  border-color: var(--common);
+}
+
+.rarity-uncommon {
+  border-color: var(--uncommon);
+}
+
+.rarity-rare {
+  border-color: var(--rare);
+}
+
+.rarity-epic {
+  border-color: var(--epic);
+}
+
+.rarity-legendary {
+  border-color: var(--legendary);
+}
+
+.inventory-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 10px;
+}
+
+.collection-character-sheet {
+  margin-bottom: 10px;
+}
+
+.collection-character-sheet .player-stats-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.slot {
+  min-height: 46px;
+  padding: 6px;
+}
+
+.slot span,
+.collection-card p {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.slot strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.collection-list {
+  display: grid;
+  gap: 8px;
+  max-height: 64vh;
+  overflow: auto;
+}
+
+.collection-card {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+}
+
+.collection-card h3,
+.collection-card p {
+  margin-bottom: 3px;
+}
+
+.modal {
+  width: min(920px, calc(100vw - 26px));
+  padding: 18px;
+  color: var(--text);
+}
+
+.modal::backdrop {
+  background: rgba(242, 240, 237, 0.72);
+}
+
+@media (max-width: 960px) {
+  .app-shell {
+    padding: 8px;
+  }
+
+  .selection-layout,
+  .battle-layout,
+  .inventory-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .kit-grid,
+  .kit-grid.six,
+  .loot-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-wrap {
+    min-height: 438px;
+  }
+
+  .battlefield {
+    padding-left: 14px;
+  }
+
+  .side-panel {
+    position: sticky;
+    bottom: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --battle-cell-width: 96px;
+    --battle-cell-height: 120px;
+    --battle-gap: 5px;
+  }
+
+  html,
+  body {
+    min-height: var(--phone-height);
+  }
+
+  .app-shell {
+    min-height: var(--phone-height);
+    padding: 6px;
+  }
+
+  .screen {
+    min-height: calc(var(--phone-height) - 12px);
+  }
+
+  #roleScreen {
+    padding: 34px 20px;
+  }
+
+  #roleScreen .screen-header {
+    margin-bottom: 26px;
+  }
+
+  #roleScreen h1 {
+    font-size: 43px;
+    line-height: 1.05;
+  }
+
+  .role-choice-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .role-choice-card {
+    min-height: 206px;
+    padding: 18px 24px;
+    border-radius: 20px;
+  }
+
+  .role-choice-title {
+    gap: 14px;
+  }
+
+  .role-choice-title span {
+    font-size: 36px;
+  }
+
+  .role-choice-title strong {
+    font-size: 38px;
+  }
+
+  .role-choice-rule {
+    margin: 14px 0 12px;
+  }
+
+  .role-choice-card ul {
+    gap: 3px;
+    font-size: 22px;
+    line-height: 1.22;
+  }
+
+  .battle-screen {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-height: calc(var(--phone-height) - 12px);
+  }
+
+  .screen-header,
+  .combat-topbar,
+  .modal-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 7px;
+  }
+
+  .combat-topbar {
+    align-items: center;
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .combat-topbar > div:first-child {
+    min-width: 0;
+  }
+
+  .combat-topbar h1 {
+    overflow: hidden;
+    font-size: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  h1 {
+    font-size: 21px;
+  }
+
+  h2 {
+    font-size: 11px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+  }
+
+  .topbar-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .combat-topbar .topbar-actions {
+    flex: 0 0 164px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .primary-button,
+  .icon-text-button,
+  .ability-button,
+  .collection-card button {
+    min-height: 36px;
+  }
+
+  .formation-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+    overflow-x: hidden;
+  }
+
+  .formation-cell,
+  .empty-cell {
+    height: 124px;
+    min-height: 0;
+  }
+
+  .loot-card {
+    grid-template-rows: auto 76px auto auto;
+    min-height: 238px;
+  }
+
+  .card-art {
+    min-height: 76px;
+    margin: 5px 0;
+  }
+
+  .card-art strong {
+    font-size: 24px;
+  }
+
+  .card-body {
+    min-height: 64px;
+    padding: 5px;
+  }
+
+  .card-rules {
+    font-size: 10px;
+  }
+
+    .battlefield {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 8px;
+  }
+
+  .cell,
+  .unit-card {
+    width: var(--battle-cell-width);
+    min-width: var(--battle-cell-width);
+    height: var(--battle-cell-height);
+    min-height: var(--battle-cell-height);
+  }
+
+  .unit-card {
+    padding: 4px;
+  }
+
+  .unit-name {
+    font-size: 11px;
+  }
+
+  .unit-meta,
+  .target-readout,
+  .bulwark-readout,
+  .hp-text {
+    font-size: 8px;
+  }
+
+  .field-wrap {
+    display: grid;
+    align-content: center;
+    min-height: 344px;
+    overflow: hidden;
+  }
+
+  .side-panel {
+    gap: 5px;
+    padding: 6px;
+    align-self: end;
+  }
+
+  .side-panel section {
+    min-width: 0;
+  }
+
+  .target-panel {
+    padding: 6px;
+  }
+
+  .target-panel span {
+    font-size: 9px;
+  }
+
+  .target-panel strong {
+    overflow: hidden;
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ability-bar {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .ability-button {
+    min-height: 38px;
+    padding: 3px;
+  }
+
+  .ability-button strong {
+    font-size: 9px;
+  }
+
+  .ability-button small {
+    font-size: 8px;
+  }
+
+  .meter-row {
+    grid-template-columns: 52px repeat(4, 17px);
+    min-height: 17px;
+    font-size: 8px;
+  }
+
+  .meter-row span {
+    min-height: 17px;
+  }
+
+    .stat-mini-row {
+    grid-template-columns: minmax(42px, 1fr) 28px 34px 30px;
+    min-height: 15px;
+    font-size: 7px;
+  }
+
+  .stat-mini-row strong,
+  .stat-mini-row span {
+    padding: 2px;
+  }
+
+  .gear-mini-list {
+    max-width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gear-mini-list div {
+    grid-template-columns: 38px 1fr;
+    padding: 2px 3px;
+    font-size: 7px;
+  }
+
+  .loot-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .slot-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .collection-card {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    width: calc(100vw - 12px);
+    max-width: var(--phone-width);
+    max-height: calc(var(--phone-height) - 12px);
+    padding: 10px;
+    overflow: auto;
+  }
+}
+
+/* Phone-first lock: the game is authored for the iPhone Pro Max canvas (428x926).
+   Cells are sized so 4 columns + gaps + the battlefield's own padding fit inside
+   the 428px shell, with the taller cells using the vertical space the battle
+   layout reclaimed. Narrower handsets step down at the 400px breakpoint below. */
+:root {
+  --battle-cell-width: 96px;
+  --battle-cell-height: 120px;
+  --battle-gap: 5px;
+}
+
+html,
+body {
+  min-height: var(--phone-height);
+}
+
+.app-shell {
+  min-height: var(--phone-height);
+  padding: 6px;
+}
+
+.screen {
+  min-height: calc(var(--phone-height) - 12px);
+}
+
+#roleScreen {
+  padding: 28px 20px;
+}
+
+#roleScreen .screen-header {
+  margin-bottom: 20px;
+}
+
+#roleScreen h1 {
+  font-size: 39px;
+  line-height: 1.05;
+}
+
+.role-choice-screen {
+  gap: 14px;
+}
+
+.role-enemy-preview h2 {
+  font-size: 12px;
+}
+
+.role-enemy-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.role-enemy-card {
+  min-height: 54px;
+  padding: 8px;
+  border-radius: 14px;
+}
+
+.role-enemy-card > span {
+  font-size: 15px;
+}
+
+.role-enemy-card strong {
+  font-size: 13px;
+}
+
+.role-enemy-card small {
+  font-size: 11px;
+}
+
+.role-choice-grid {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.role-choice-card {
+  min-height: 176px;
+  max-height: 176px;
+  padding: 16px 20px;
+  border-radius: 20px;
+}
+
+.role-choice-title {
+  gap: 14px;
+}
+
+.role-choice-title span {
+  font-size: 31px;
+}
+
+.role-choice-title strong {
+  font-size: 33px;
+}
+
+.role-choice-rule {
+  margin: 12px 0 10px;
+}
+
+.role-choice-card ul {
+  gap: 2px;
+  font-size: 16px;
+  line-height: 1.14;
+}
+
+.battle-screen {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: calc(var(--phone-height) - 12px);
+}
+
+.battle-layout,
+.selection-layout,
+.inventory-layout {
+  grid-template-columns: 1fr;
+}
+
+.combat-topbar {
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.combat-topbar > div:first-child {
+  min-width: 0;
+}
+
+.combat-topbar h1 {
+  overflow: hidden;
+  font-size: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.combat-topbar .topbar-actions {
+  flex: 0 0 164px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.formation-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  overflow-x: hidden;
+}
+
+.formation-cell,
+.empty-cell {
+  height: 124px;
+  min-height: 0;
+}
+
+.battlefield {
+  width: 100%;
+  justify-content: center;
+  padding: 10px 8px;
+}
+
+.cell,
+.unit-card {
+  width: var(--battle-cell-width);
+  min-width: var(--battle-cell-width);
+  height: var(--battle-cell-height);
+  min-height: var(--battle-cell-height);
+}
+
+.field-wrap {
+  display: grid;
+  align-content: center;
+  min-height: 344px;
+  overflow: hidden;
+}
+
+.side-panel {
+  gap: 5px;
+  padding: 6px;
+  align-self: end;
+}
+
+.loot-grid {
+  grid-template-columns: 1fr;
+}
+
+/* ---------------------------------------------------------------
+   Multi-square units, run track, and run summary (dungeon run work)
+   Specificity is deliberately raised so the mobile media-query
+   overrides for .cell / .unit-card do not clobber the wide variant.
+   --------------------------------------------------------------- */
+
+.battlefield .cell.cell-wide {
+  grid-column: span 2;
+  width: calc(var(--battle-cell-width) * 2 + var(--battle-gap));
+  min-width: calc(var(--battle-cell-width) * 2 + var(--battle-gap));
+}
+
+.battlefield .unit-card.wide {
+  width: calc(var(--battle-cell-width) * 2 + var(--battle-gap));
+  min-width: calc(var(--battle-cell-width) * 2 + var(--battle-gap));
+}
+
+.battlefield .unit-card.wide .unit-name {
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+.battlefield .unit-card.enemy.wide {
+  box-shadow: inset 0 0 0 2px rgba(201, 151, 29, 0.55), 0 0 18px rgba(186, 55, 44, 0.28);
+}
+
+.run-track {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.run-pip {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+  color: rgba(145, 121, 48, 0.62);
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.run-pip.miniboss {
+  border-color: rgba(186, 55, 44, 0.5);
+}
+
+.run-pip.boss {
+  border-color: rgba(186, 55, 44, 0.9);
+  color: rgba(165, 45, 29, 0.85);
+}
+
+.run-pip.cleared {
+  background: rgba(216, 201, 168, 0.24);
+  border-color: rgba(63, 166, 79, 0.72);
+  color: rgba(145, 121, 48, 0.92);
+}
+
+.run-pip.current {
+  background: rgba(224, 200, 143, 0.92);
+  border-color: #c9971d;
+  color: #141307;
+  box-shadow: 0 0 10px rgba(62, 48, 30, 0.18);
+}
+
+.loot-card.picked {
+  box-shadow: inset 0 0 0 3px rgba(201, 151, 29, 0.95), 0 0 20px rgba(201, 151, 29, 0.35);
+  transform: translateY(-3px);
+}
+
+.loot-card.picked::after {
+  content: "SECURED";
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 4;
+  padding: 2px 6px;
+  background: rgba(224, 200, 143, 0.92);
+  color: #141307;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+#lootConfirmButton[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.result-note {
+  margin: 6px 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  opacity: 0.78;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.run-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.run-stat {
+  display: grid;
+  gap: 3px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+  box-shadow: 0 12px 30px rgba(62, 48, 30, 0.18);
+}
+
+.run-stat span {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  opacity: 0.66;
+  text-transform: uppercase;
+}
+
+.run-stat strong {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.run-card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.run-card {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+  box-shadow: 0 12px 30px rgba(62, 48, 30, 0.18);
+}
+
+.run-card strong {
+  font-size: 13px;
+}
+
+.run-card span {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  opacity: 0.66;
+  text-transform: uppercase;
+}
+
+.run-card.empty {
+  opacity: 0.5;
+}
+
+/* --- Range feedback ---------------------------------------------------- */
+
+.ability-button.out-of-range {
+  opacity: 0.42;
+  filter: grayscale(0.6);
+}
+
+.ability-button.out-of-range small {
+  color: rgba(157, 46, 37, 0.95);
+  font-weight: 900;
+}
+
+.target-panel strong.out-of-range {
+  color: #ab2516;
+}
+
+.target-panel strong.point-blank::after {
+  content: " · POINT BLANK";
+  color: #c27c00;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+/* Rarity accent on the run-complete card list (the class was already emitted). */
+.run-card { border-left-width: 4px; }
+.run-card.rarity-common { border-left-color: var(--common); }
+.run-card.rarity-uncommon { border-left-color: var(--uncommon); }
+.run-card.rarity-rare { border-left-color: var(--rare); }
+.run-card.rarity-epic { border-left-color: var(--epic); }
+.run-card.rarity-legendary { border-left-color: var(--legendary); }
+
+/* Role preview: cards size to their content instead of clipping it. */
+#roleScreen .role-formation-grid {
+  grid-auto-rows: minmax(164px, auto);
+  align-items: stretch;
+}
+
+#roleScreen .role-formation-cell,
+#roleScreen .role-formation-cell .role-choice-card,
+.role-choice-card {
+  max-height: none;
+  height: auto;
+}
+
+.role-choice-card ul {
+  overflow: visible;
+}
+
+/* Battle side panel: Gear & Stats and Live Meter sit side by side.
+   Scoped so the loot/equip/role sheets keep their own natural sizing. */
+.battle-info-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.battle-info-row > section {
+  min-width: 0;
+}
+
+.battle-info-row .player-stats-panel,
+.battle-info-row .stat-mini-grid,
+.battle-info-row .meter-list,
+.battle-info-row .gear-mini-list {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.battle-info-row .stat-mini-row {
+  grid-template-columns: minmax(0, 1fr) 24px 28px 26px;
+}
+
+.battle-info-row .meter-row {
+  grid-template-columns: minmax(0, 1fr) repeat(4, 16px);
+}
+
+.battle-info-row .meter-row strong,
+.battle-info-row .stat-mini-row strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The battle grid was stretching its rows to fill the screen's min-height, which
+   left a large dead gap between the battlefield and the side panel. Size rows to
+   their content and let the panel sit directly beneath the field. */
+.battle-layout {
+  align-content: start;
+  grid-auto-rows: min-content;
+}
+
+.battle-screen .side-panel {
+  align-self: start;
+}
+
+/* Step the arena down on narrower handsets so four columns still fit. */
+@media (max-width: 400px) {
+  :root {
+    --battle-cell-width: 82px;
+    --battle-cell-height: 104px;
+    --battle-gap: 4px;
+  }
+}
+
+/* The field sizes to the arena now rather than a fixed reserve. */
+.field-wrap {
+  min-height: 0;
+}
+
+/* Bigger cells mean the unit cards can finally show their text instead of
+   truncating it at three characters. */
+.battlefield .unit-card {
+  padding: 6px 6px 5px;
+}
+
+.battlefield .unit-name {
+  font-size: 12px;
+  line-height: 1.12;
+  white-space: normal;
+  /* break-word, not anywhere: prefer word boundaries so "Kingsguard Archer"
+     wraps between words instead of splitting mid-word. */
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+}
+
+.battlefield .unit-card.wide .unit-name {
+  font-size: 15px;
+}
+
+.battlefield .unit-meta,
+.battlefield .target-readout {
+  font-size: 9px;
+  line-height: 1.15;
+}
+
+.battlefield .hp-text {
+  font-size: 11px;
+}
+
+.battlefield .bulwark-readout {
+  font-size: 8px;
+  line-height: 1.15;
+}
+
+/* Narrow handsets: shrink the name a notch so long unit names still fit a line. */
+@media (max-width: 400px) {
+  .battlefield .unit-name {
+    font-size: 11px;
+  }
+
+  .battlefield .unit-card.wide .unit-name {
+    font-size: 14px;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Unit tokens. Units are pieces on a board; "card" now means gear
+   exclusively. Shape + role symbol per the spec's shape language.
+   --------------------------------------------------------------- */
+
+.battlefield .unit-token {
+  display: grid;
+  grid-template-rows: 12px 1fr auto auto auto;
+  gap: 2px;
+  place-items: center;
+  padding: 3px 4px 4px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.battlefield .unit-token .token-shape {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 2px solid var(--line-bright);
+  background: var(--panel-soft);
+  box-shadow: 0 3px 10px rgba(62, 48, 30, 0.22);
+}
+
+/* Allies are discs, enemies are angular. Readable at a glance without colour. */
+.battlefield .unit-token.ally .token-shape { border-radius: 50%; }
+.battlefield .unit-token.enemy .token-shape {
+  border-radius: 4px;
+  transform: rotate(45deg);
+}
+.battlefield .unit-token.enemy .token-symbol { transform: rotate(-45deg); }
+
+.battlefield .unit-token.ally .token-shape { border-color: #2a6795; }
+.battlefield .unit-token.enemy .token-shape { border-color: #a83228; }
+.battlefield .unit-token.player .token-shape {
+  border-color: var(--gold);
+  border-width: 3px;
+  box-shadow: 0 0 0 3px rgba(154, 111, 20, 0.22), 0 3px 10px rgba(62, 48, 30, 0.25);
+}
+
+.battlefield .unit-token.wide .token-shape { width: 62px; height: 62px; }
+
+.battlefield .unit-token.selected .token-shape {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.battlefield .unit-token.dead {
+  opacity: 0.38;
+  filter: grayscale(0.85);
+}
+
+.battlefield .unit-token .token-symbol {
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.battlefield .unit-token.wide .token-symbol { font-size: 30px; }
+
+.battlefield .unit-token .token-name {
+  max-width: 100%;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.battlefield .unit-token.wide .token-name { font-size: 12px; }
+
+.battlefield .unit-token .hp-bar {
+  width: 100%;
+  height: 5px;
+}
+
+.battlefield .unit-token .token-hp {
+  font-size: 8px;
+  font-weight: 700;
+  opacity: 0.75;
+}
+
+.battlefield .unit-token .cast-track {
+  width: 100%;
+  height: 11px;
+}
+
+.battlefield .unit-token .token-pips {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  min-height: 12px;
+}
+
+.battlefield .unit-token .pip {
+  display: grid;
+  place-items: center;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  font-size: 8px;
+  font-style: normal;
+  line-height: 1;
+}
+
+.pip.enraged, .pip.exposed { border-color: var(--red); color: var(--red); }
+.pip.pointblank { border-color: var(--legendary); color: var(--legendary); }
+.pip.guard, .pip.barrier, .pip.bulwark { border-color: var(--blue); color: var(--blue); }
+.pip.cc, .pip.incoming { border-color: var(--violet); color: var(--violet); }
+.pip.dive { border-color: var(--gold); color: var(--gold); }
+
+/* Destination picker */
+.battlefield .cell.move-square {
+  cursor: pointer;
+  background: rgba(42, 103, 149, 0.16);
+  box-shadow: inset 0 0 0 2px rgba(42, 103, 149, 0.7);
+}
+
+.ability-button.armed {
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 2px var(--gold);
+}
+
+/* The detail that left the board */
+.target-detail {
+  display: grid;
+  gap: 2px;
+  margin-top: 6px;
+}
+
+.target-detail div {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  gap: 6px;
+  align-items: baseline;
+  font-size: 10px;
+}
+
+.target-detail span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.target-detail strong { font-weight: 700; }
+.target-detail .wide-row strong { color: var(--red); }
+
+/* Carry-overs from the old card styling that still drew rectangles around a
+   token. State belongs on the shape now. */
+.battlefield .unit-token.incoming-cc,
+.battlefield .unit-token.casting-cc {
+  outline: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.battlefield .unit-token.incoming-cc .token-shape {
+  border-color: var(--violet);
+  background: rgba(238, 231, 246, 0.96);
+}
+
+.battlefield .unit-token.casting-cc .token-shape {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 3px rgba(99, 64, 159, 0.28), 0 3px 10px rgba(62, 48, 30, 0.22);
+}
+
+/* Reserve the cast row so tokens sit on the same baseline whether or not
+   anything is casting. */
+.battlefield .unit-token {
+  grid-template-rows: 12px 1fr 14px 5px 10px 12px;
+  align-content: start;
+}
+
+.battlefield .unit-token .cast-track {
+  grid-row: 6;
+}
+
+.battlefield .unit-token .token-name {
+  grid-row: 3;
+  align-self: center;
+}
+
+.battlefield .unit-token .hp-bar { grid-row: 4; }
+.battlefield .unit-token .token-hp { grid-row: 5; }
+
+.battlefield .unit-token .cast-track strong {
+  font-size: 7px;
+  letter-spacing: 0;
+}
+
+/* A square rotated 45deg has a diagonal ~1.41x its side, so it overflowed its
+   grid row and collided with the name. Reserve a fixed row and size the rotated
+   shapes to fit inside it. */
+.battlefield .unit-token {
+  grid-template-rows: 12px 58px 14px 5px 10px 12px;
+}
+
+.battlefield .unit-token .token-shape {
+  width: 46px;
+  height: 46px;
+}
+
+.battlefield .unit-token.enemy .token-shape {
+  width: 39px;
+  height: 39px;
+}
+
+.battlefield .unit-token.wide .token-shape {
+  width: 46px;
+  height: 46px;
+}
+
+.battlefield .unit-token.enemy .token-symbol {
+  font-size: 19px;
+}
+
+.battlefield .unit-token.wide .token-symbol {
+  font-size: 24px;
+}
+
+/* Compact two-column collection for the phone canvas. */
+.collection-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+@media (max-width: 960px) {
+  .collection-card {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.collection-card {
+  min-width: 0;
+  gap: 5px;
+  padding: 6px;
+}
+
+.collection-card h3 {
+  margin: 0 0 2px;
+  font-size: 10px;
+  line-height: 1.15;
+}
+
+.collection-card p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  font-size: 8px;
+  line-height: 1.2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.collection-card button {
+  min-height: 30px;
+  padding: 4px 6px;
+  font-size: 9px;
+}
+
+.modal {
+  width: min(var(--phone-width), calc(100vw - 12px));
+  max-width: var(--phone-width);
+}
+
+.modal .inventory-layout {
+  grid-template-columns: 1fr;
+}
+
+/* Battle units use compact information cards inside the existing 4x4 grid. */
+.battlefield .unit-card.unit-token {
+  position: relative;
+  display: grid;
+  place-items: stretch;
+  grid-template-rows: 42px 25px minmax(0, 1fr) 12px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 4px;
+  overflow: hidden;
+  color: var(--text);
+  text-align: left;
+  background: #fff;
+  border: 1px solid #aaa39a;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(51, 45, 38, 0.12);
+}
+
+.battlefield .unit-card.unit-token.ally {
+  border-top: 3px solid #2a6795;
+}
+
+.battlefield .unit-card.unit-token.enemy {
+  border-top: 3px solid #a83228;
+}
+
+.battlefield .unit-card.unit-token.player {
+  border-color: #9a6a12;
+  border-top-width: 3px;
+}
+
+.battlefield .unit-card.unit-token.selected {
+  outline: 2px solid #c58b1b;
+  outline-offset: -2px;
+}
+
+.battlefield .unit-card.unit-token .ultimate-border {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.battlefield .unit-card.unit-token .ultimate-border rect {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-width: 3px;
+}
+
+.battlefield .unit-card.unit-token .ultimate-border-track {
+  stroke: #c4beb5;
+}
+
+.battlefield .unit-card.unit-token .ultimate-border-fill {
+  stroke: #c58b1b;
+  stroke-linecap: butt;
+  stroke-dashoffset: 0;
+  transition: stroke-dasharray 160ms linear;
+}
+
+.battlefield .unit-card.unit-token.enemy .ultimate-border-fill {
+  stroke: #b5362c;
+}
+
+.battlefield .unit-card.unit-token.ultimate-ready .ultimate-border-fill {
+  stroke: #d39b22;
+  filter: drop-shadow(0 0 2px rgba(197, 139, 27, 0.7));
+}
+
+.battlefield .unit-card.unit-token.enemy.ultimate-ready .ultimate-border-fill {
+  stroke: #d23f34;
+  filter: drop-shadow(0 0 2px rgba(181, 54, 44, 0.72));
+}
+
+.battle-card-head {
+  min-width: 0;
+  padding-right: 47px;
+}
+
+.battle-card-head span,
+.battle-card-health span,
+.battle-card-conditions > span,
+.battle-card-target > span {
+  display: block;
+  font-size: 6px;
+  line-height: 1.1;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.battle-card-head strong {
+  display: block;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.battle-card-head small {
+  display: block;
+  overflow: hidden;
+  font-size: 6px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.battle-card-target {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 45px;
+  min-height: 36px;
+  padding: 3px;
+  overflow: hidden;
+  background: #f3f1ed;
+  border: 1px solid #c9c4bc;
+  border-radius: 3px;
+}
+
+.battle-card-target strong,
+.battle-card-target small {
+  display: block;
+  overflow: hidden;
+  font-size: 6px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.battle-card-target > div {
+  height: 3px;
+  margin: 2px 0;
+  overflow: hidden;
+  background: #d8d4cd;
+}
+
+.battle-card-target > div i {
+  display: block;
+  height: 100%;
+  background: #a83228;
+}
+
+.battle-card-health {
+  min-width: 0;
+}
+
+.battle-card-health > strong {
+  float: right;
+  margin-top: -7px;
+  font-size: 7px;
+}
+
+.battle-card-health .hp-bar {
+  box-sizing: border-box;
+  width: calc(100% - 8px);
+  height: 7px;
+  margin: 3px auto 0;
+  overflow: hidden;
+  background: #dedbd5;
+  border: 1px solid #c9c4bc;
+}
+
+.battle-card-health .hp-bar i {
+  display: block;
+  height: 100%;
+  background: #397652;
+}
+
+.battlefield .unit-card.unit-token.enemy .battle-card-health .hp-bar i {
+  background: #a83228;
+}
+
+.battle-card-conditions {
+  min-height: 0;
+  padding: 3px;
+  overflow: hidden;
+  background: #f7f6f3;
+  border: 1px solid #d8d4cd;
+}
+
+.battle-card-conditions div {
+  display: grid;
+  gap: 1px;
+  margin-top: 2px;
+}
+
+.battle-card-conditions small {
+  overflow: hidden;
+  font-size: 6px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.battlefield .unit-card.unit-token .token-pips {
+  position: absolute;
+  right: 3px;
+  bottom: 2px;
+  display: flex;
+  gap: 1px;
+}
+
+.battlefield .unit-card.unit-token .cast-track {
+  position: relative;
+  grid-row: 4;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Keep the complete six-card ability hand visible in one phone-width row. */
+#battleScreen .ability-bar {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 3px;
+}
+
+#battleScreen .ability-button {
+  min-width: 0;
+  min-height: 58px;
+  padding: 3px 2px;
+}
+
+#battleScreen .ability-button strong {
+  font-size: 9px;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+#battleScreen .ability-button small {
+  margin-top: 2px;
+  font-size: 7px;
+  line-height: 1.05;
+}
+
+.card-keywords {
+  display: block;
+  margin: 2px 0;
+  color: #7d5410;
+  font-size: 8px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.battle-action-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  align-items: stretch;
+}
+
+.battle-action-row > section {
+  min-width: 0;
+}
+
+#battleScreen .battle-action-row .ability-bar {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+}
+
+#battleScreen .battle-action-row .ability-button {
+  min-height: 46px;
+}
+
+.battle-action-row .target-panel {
+  padding: 6px;
+}
+
+.battle-action-row .target-detail div {
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 3px;
+}
