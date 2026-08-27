@@ -3392,3 +3392,7 @@ body {
   margin: 2px 0 0;
   line-height: 1;
 }
+
+.battlefield {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}

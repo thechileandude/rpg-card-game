@@ -659,7 +659,7 @@ const enemyFormation = [
 ];
 
 const gridRows = 4;
-const gridCols = 4;
+const gridCols = 3;
 
 const positions = {
   enemyHealer: { row: 0, col: 1 },
@@ -667,10 +667,10 @@ const positions = {
   enemyBoss: { row: 1, col: 1 },
   enemyDamageBackA: { row: 0, col: 0 },
   enemyDamageBackB: { row: 0, col: 2 },
-  enemyDamageBackC: { row: 0, col: 3 },
+  enemyDamageBackC: { row: 0, col: 2 },
   enemyDamageFrontA: { row: 1, col: 1 },
   enemyDamageFrontB: { row: 1, col: 2 },
-  enemyDamageFrontC: { row: 1, col: 3 },
+  enemyDamageFrontC: { row: 1, col: 2 },
   allyTank: { row: 2, col: 0 },
   allyDps: { row: 2, col: 1 },
   allyDpsFlank: { row: 2, col: 2 },
@@ -750,6 +750,7 @@ const state = {
   squareAttackTimer: 0,
   squareAttacks: [],
   respawnQueue: [],
+  floaters: [],
   enrageTimer: 0,
   fightElapsed: 0,
   softEnrageStacks: 0
@@ -1208,6 +1209,8 @@ function createUnit(roleId, team, name, slotKey, hpMultiplier = 1, positionKey =
     tauntTimer: 0,
     guardTimer: 0,
     guardMitigation: 0.5,
+    hitFlash: 0,
+    healFlash: 0,
     moveTimer: 0,
     diveHome: null,
     diveActionsLeft: 0,
@@ -1255,6 +1258,7 @@ function enterRoom(index = state.run?.roomIndex ?? 0) {
   state.pendingReposition = null;
   state.squareAttacks = [];
   state.respawnQueue = [];
+  state.floaters = [];
   state.squareAttackTimer = encounter.squareAttack ? encounter.squareAttack.interval * 0.55 : 0;
   state.enrageTimer = encounter.enrage ? encounter.enrage.firstAt : 0;
   state.fightElapsed = 0;
@@ -1574,12 +1578,46 @@ function showFloatingMessage(unit, message) {
   unit.interruptMessageTimer = 0.9;
 }
 
+// --- Combat feedback --------------------------------------------------------
+// Numbers float off the token that was hit and the token flashes. Both systems
+// route through applyDamage/heal here, so the card module gets this for free.
+const floaterLife = 1.05;
+let floaterSeq = 0;
+
+function pushFloater(unit, text, kind) {
+  if (!unit || !text) return;
+  floaterSeq += 1;
+  state.floaters.push({ unitId: unit.id, text, kind, t: 0, id: floaterSeq });
+  // Hard cap: a whirlwind into a respawning pack can spam these.
+  if (state.floaters.length > 36) state.floaters.splice(0, state.floaters.length - 36);
+}
+
+function tickFeedback(dt) {
+  if (state.floaters.length) {
+    state.floaters.forEach((f) => { f.t += dt; });
+    state.floaters = state.floaters.filter((f) => f.t < floaterLife);
+  }
+  state.units.forEach((unit) => {
+    if (unit.hitFlash > 0) unit.hitFlash = Math.max(0, unit.hitFlash - dt);
+    if (unit.healFlash > 0) unit.healFlash = Math.max(0, unit.healFlash - dt);
+  });
+}
+
+function floatersFor(unitId) {
+  return state.floaters.filter((f) => f.unitId === unitId);
+}
+
 function heal(source, target, amount) {
   if (!source || !target || target.dead) return;
   const adjusted = Math.round(amount + source.stats.abilityPower);
   const before = target.hp;
   target.hp = Math.min(target.maxHp, target.hp + adjusted);
-  addMeter(source, "healing", target.hp - before);
+  const restored = target.hp - before;
+  addMeter(source, "healing", restored);
+  if (restored > 0) {
+    pushFloater(target, `+${Math.round(restored)}`, "heal");
+    target.healFlash = 0.3;
+  }
 }
 
 function damage(source, target, amount) {
@@ -1613,9 +1651,17 @@ function damage(source, target, amount) {
 function applyDamage(source, target, amount) {
   const before = target.hp;
   target.hp = Math.max(0, target.hp - amount);
-  addMeter(source, "damage", before - target.hp);
+  const dealt = before - target.hp;
+  addMeter(source, "damage", dealt);
+  if (dealt > 0) {
+    pushFloater(target, `-${Math.round(dealt)}`, target.team === "ally" ? "hurt" : "damage");
+    target.hitFlash = 0.26;
+  } else if (amount > 0) {
+    pushFloater(target, "ABSORBED", "absorb");
+  }
   if (target.hp <= 0) {
     target.dead = true;
+    pushFloater(target, "DOWN", "down");
     target.cast = null;
     if (target.diveHome) endDive(target, true);
     if (isRespawnableBossAdd(target)) scheduleRespawn(target);
@@ -2407,7 +2453,8 @@ function renderUnitCard(unit) {
   const isCastingCc = unit.cast?.abilityId === "barrier";
   const art = roleTokens[unit.roleId] || roleTokens.dps;
   const ultimatePct = Math.max(0, Math.min(100, unit.ultimateCharge || 0));
-  token.className = `unit-card unit-token ${unit.team} ${art.glyph} ${unitWidth(unit) > 1 ? "wide" : ""} ${unit.isPlayer ? "player" : ""} ${unit.dead ? "dead" : ""} ${ultimatePct >= 100 ? "ultimate-ready" : ""} ${state.selectedTargetId === unit.id ? "selected" : ""} ${barrierCaster ? "incoming-cc" : ""} ${isCastingCc ? "casting-cc" : ""}`;
+  const flash = unit.hitFlash > 0 ? "hit-flash" : unit.healFlash > 0 ? "heal-flash" : "";
+  token.className = `unit-card unit-token ${flash} ${unit.team} ${art.glyph} ${unitWidth(unit) > 1 ? "wide" : ""} ${unit.isPlayer ? "player" : ""} ${unit.dead ? "dead" : ""} ${ultimatePct >= 100 ? "ultimate-ready" : ""} ${state.selectedTargetId === unit.id ? "selected" : ""} ${barrierCaster ? "incoming-cc" : ""} ${isCastingCc ? "casting-cc" : ""}`;
   token.title = `${unit.name} — ${art.label}${unit.dead ? " (down)" : ""}`;
   const castProgress = unit.cast ? Math.min(100, (unit.cast.elapsed / unit.cast.castTime) * 100) : 0;
   const bossAttack = unit.id === squareAttackSourceUnit()?.id ? activeBossAttack() : null;
@@ -2418,6 +2465,12 @@ function renderUnitCard(unit) {
     : unit.cast ? `${unit.cast.name}${castCounter}` : "";
   const hpPct = Math.max(0, (unit.hp / unit.maxHp) * 100);
   const pips = statusPips(unit);
+  const floats = floatersFor(unit.id).map((f) => {
+    const rise = Math.round(f.t * 34);
+    const fade = Math.max(0, 1 - Math.pow(f.t / floaterLife, 2));
+    const pop = f.t < 0.12 ? 1 + (0.12 - f.t) * 2.5 : 1;
+    return `<span class="floater ${f.kind}" style="transform:translate(-50%,-${rise}px) scale(${pop.toFixed(2)});opacity:${fade.toFixed(2)}">${f.text}</span>`;
+  }).join("");
   const conditions = unitStatuses(unit);
   const target = unitById(unit.targetId);
   const targetHpPct = target ? Math.max(0, (target.hp / target.maxHp) * 100) : 0;
@@ -2452,6 +2505,7 @@ function renderUnitCard(unit) {
         ? `<div class="cast-track"><span style="width:${unit.interruptMessageTimer > 0 ? 100 : castProgress}%"></span><strong>${castLabel}</strong></div>`
         : ""
     }
+    <div class="token-floaters" aria-hidden="true">${floats}</div>
   `;
   return token;
 }
@@ -2910,6 +2964,8 @@ function frame(time) {
   const dt = Math.min(0.1, (time - state.lastTime) / 1000 || 0);
   state.lastTime = time;
   if (state.screen === "battle" && !state.result) updateCombat(dt);
+  // Feedback keeps animating through the win/lose pause, so the killing blow reads.
+  if (state.screen === "battle") tickFeedback(dt);
   state.renderAccumulator += dt;
   if (state.renderAccumulator > 0.08) {
     state.renderAccumulator = 0;
