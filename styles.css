@@ -3638,3 +3638,72 @@ body:has(#battleScreen:not(.hidden)) .app-shell {
   font-size: 11px;
   line-height: 1.05;
 }
+
+/* Loot choices use readable landscape cards: three full-width rows. */
+#lootScreen .stat-mini-row,
+#lootScreen .gear-mini-list div {
+  font-size: 14px;
+}
+
+#lootScreen .loot-grid {
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+
+#lootScreen .loot-card {
+  grid-template-columns: 72px minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "rarity rarity"
+    "art body"
+    "footer footer";
+  gap: 3px;
+  min-height: 0;
+  padding: 4px;
+}
+
+#lootScreen .card-rarity {
+  grid-area: rarity;
+  font-size: 14px;
+}
+
+#lootScreen .card-art {
+  grid-area: art;
+  min-height: 0;
+  height: 100%;
+  margin: 0;
+}
+
+#lootScreen .card-art span {
+  font-size: 12px;
+}
+
+#lootScreen .card-art strong {
+  font-size: 22px;
+}
+
+#lootScreen .card-body {
+  grid-area: body;
+  align-content: center;
+  padding: 4px 6px;
+}
+
+#lootScreen .card-body h3 {
+  font-size: 18px;
+  line-height: 1;
+  text-align: left;
+}
+
+#lootScreen .stat-line,
+#lootScreen .card-keywords,
+#lootScreen .card-rules {
+  font-size: 14px;
+  line-height: 1.1;
+  text-align: left;
+}
+
+#lootScreen .card-footer {
+  grid-area: footer;
+  font-size: 12px;
+}
