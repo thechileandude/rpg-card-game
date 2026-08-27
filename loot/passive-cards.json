@@ -1,0 +1,17 @@
+{
+  "id": "relics-and-oaths",
+  "name": "Relics and Oaths",
+  "cards": [
+    {"id":"chronometer-gear","name":"Chronometer Gear","role":"all","slot":"artifact","rarity":"Uncommon","acquisitionProfile":"tank","abilities":[],"stats":{"cooldownReduction":0.1},"rulesText":"Your ability cooldowns are 10% shorter."},
+    {"id":"casting-prism","name":"Prism of Motion","role":"all","slot":"artifact","rarity":"Rare","acquisitionProfile":"caster","abilities":[],"stats":{"haste":0.15},"rulesText":"Gain 15% Haste. Haste accelerates autos, casts, and global recovery."},
+    {"id":"ironheart-idol","name":"Ironheart Idol","role":"all","slot":"artifact","rarity":"Common","acquisitionProfile":"tank","abilities":[],"stats":{"maxHp":15},"rulesText":"You have 15 additional maximum HP."},
+    {"id":"dawn-chalice","name":"Dawn Chalice","role":"all","slot":"artifact","rarity":"Rare","acquisitionProfile":"healer","abilities":[],"stats":{"abilityPower":3},"rulesText":"Your damaging and healing abilities gain 3 power."},
+    {"id":"travelers-compass","name":"Traveler's Compass","role":"all","slot":"artifact","rarity":"Uncommon","acquisitionProfile":"hunter","abilities":[],"stats":{"moveCooldown":-1},"rulesText":"Your movement abilities recover 1 second faster."},
+
+    {"id":"overflowing-light","name":"Overflowing Light","role":"all","slot":"enchantment","rarity":"Epic","acquisitionProfile":"healer","abilities":[],"rulesText":"Excess healing becomes temporary shield."},
+    {"id":"oath-of-protection","name":"Oath of Protection","role":"all","slot":"enchantment","rarity":"Rare","acquisitionProfile":"tank","abilities":[],"rulesText":"Redirected damage generates 50% additional Ultimate charge."},
+    {"id":"arcane-momentum","name":"Arcane Momentum","role":"all","slot":"enchantment","rarity":"Rare","acquisitionProfile":"caster","abilities":[],"rulesText":"A successful interrupt makes your next cast 25% faster."},
+    {"id":"second-wind","name":"Second Wind","role":"all","slot":"enchantment","rarity":"Uncommon","acquisitionProfile":"melee","abilities":[],"rulesText":"Once per encounter, falling to 30 HP or less heals you for 15."},
+    {"id":"shared-burden","name":"Shared Burden","role":"all","slot":"enchantment","rarity":"Epic","acquisitionProfile":"healer","abilities":[],"rulesText":"Healing a protected ally also heals its Tank for 25% of the restored health."}
+  ]
+}

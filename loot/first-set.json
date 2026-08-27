@@ -1,0 +1,339 @@
+{
+  "id": "darkwood-arsenal",
+  "name": "Darkwood Arsenal",
+  "description": "A foundational set about role identity, practical equipment, positioning, and claiming the abilities used by enemies in the Darkwood Warren.",
+  "healthScale": {
+    "standard": 100,
+    "miniboss": 150,
+    "boss": 200
+  },
+  "rules": {
+    "mainWeaponAbilities": 2,
+    "offhandAbilities": 2,
+    "utilityAbilities": 1,
+    "ultimateAbilities": 1,
+    "ultimateChargeRequired": 100,
+    "ultimateChargeCarriesBetweenEncounters": true,
+    "ultimatesGenerateCharge": false,
+    "mainWeaponProvidesAuto": true,
+    "roleRestrictedCards": true,
+    "weaponPairingRestrictions": false,
+    "enemiesUseCollectibleCards": true,
+    "defeatedEnemyCardsEnterLootPool": true,
+    "rarityControlsComplexityNotPower": true,
+    "numberInflationAllowed": false,
+    "legendaryReservedForSignatureCards": true
+  },
+  "dropRates": {
+    "trash": { "Common": 84.9, "Uncommon": 10, "Rare": 4, "Epic": 1, "Legendary": 0.1 },
+    "miniboss": { "Common": 64.7, "Uncommon": 20, "Rare": 12, "Epic": 3, "Legendary": 0.3 },
+    "boss": { "Common": 39, "Uncommon": 30, "Rare": 22, "Epic": 8, "Legendary": 1 }
+  },
+  "duplicates": {
+    "copiesAreIndependent": true,
+    "eachEquippedUnitRequiresCopy": true,
+    "tradeable": true,
+    "convertibleToSameRarityCraftingCurrency": true,
+    "cosmeticTreatments": true,
+    "increaseCardPower": false
+  },
+  "futureSets": [
+    {
+      "id": "battlelines",
+      "name": "Battlelines",
+      "mechanics": ["Advance", "Hold", "Expose"]
+    }
+  ],
+  "roleRules": {
+    "allStandardUnitsHave100Hp": true,
+    "tank": { "position": "front", "ultimateChargeSource": "damageTakenPreventedOrRedirected" },
+    "healer": { "position": "back", "ultimateChargeSource": "effectiveHealing" },
+    "melee": { "position": "front", "ultimateChargeSource": "damageDealt" },
+    "hunter": { "position": "back", "ultimateChargeSource": "damageDealt" },
+    "caster": { "position": "back", "ultimateChargeSource": "damageDealt" }
+  },
+  "acquisitionProfiles": {
+    "tank": {
+      "sourceEnemies": ["Enemy Tank", "Warren Brute", "Brackenjaw", "Hollowroot", "Taskmaster", "The Warren King"],
+      "sourceEncounters": ["pull1", "pull2", "pull3", "brackenjawCaptain", "hollowrootMatriarch", "goblinTaskmaster", "warrenKing"]
+    },
+    "healer": {
+      "sourceEnemies": ["Enemy Healer", "Warren Ratcaller", "Dawn Acolyte", "Sap Tender", "Warren Bonemender"],
+      "sourceEncounters": ["pull1", "pull2", "pull3", "brackenjawCaptain", "hollowrootMatriarch", "goblinTaskmaster", "warrenKing"]
+    },
+    "melee": {
+      "sourceEnemies": ["Enemy DPS", "Warren Cutter"],
+      "sourceEncounters": ["pull1", "pull3"]
+    },
+    "hunter": {
+      "sourceEnemies": ["Enemy Hunter", "Warren Archer", "Pressgang Archer", "Kingsguard Archer"],
+      "sourceEncounters": ["pull1", "pull2", "pull3", "goblinTaskmaster", "warrenKing"]
+    },
+    "caster": {
+      "sourceEnemies": ["Enemy Caster", "Ashcaller", "Rootcaller", "Warren Vizier"],
+      "sourceEncounters": ["pull1", "pull2", "brackenjawCaptain", "hollowrootMatriarch", "warrenKing"]
+    }
+  },
+  "cards": [
+    {
+      "id": "iron-mace",
+      "name": "Iron Mace",
+      "role": "tank",
+      "slot": "mainWeapon",
+      "rarity": "Common",
+      "startingCopy": true,
+      "acquisitionProfile": "tank",
+      "auto": { "type": "damage", "amount": 4, "rate": 1.5 },
+      "abilities": [
+        { "id": "crushing-blow", "name": "Crushing Blow", "damage": 14, "range": 2, "interrupt": true, "cooldown": 5 },
+        { "id": "concussive-strike", "name": "Concussive Strike", "damage": 10, "stunDuration": 2, "cooldown": 10 }
+      ]
+    },
+    {
+      "id": "guard-shield",
+      "name": "Guard Shield",
+      "role": "tank",
+      "slot": "offhand",
+      "rarity": "Uncommon",
+      "startingCopy": true,
+      "acquisitionProfile": "tank",
+      "abilities": [
+        { "id": "shield-wall", "name": "Shield Wall", "damageReduction": 0.4, "duration": 5, "cooldown": 12 },
+        { "id": "protect", "name": "Shield", "redirectDamage": 0.5, "shield": 10, "damage": 8, "interrupt": true, "enemyRange": 1, "cooldown": 10, "target": "allyOrEnemy" }
+      ]
+    },
+    {
+      "id": "charge",
+      "name": "Charge",
+      "role": "tank",
+      "slot": "utility",
+      "rarity": "Rare",
+      "startingCopy": true,
+      "acquisitionProfile": "tank",
+      "abilities": [
+        { "id": "charge", "name": "Charge", "moveRange": 3, "target": "enemy", "damage": 6, "tauntDuration": 4, "cooldown": 8 }
+      ]
+    },
+    {
+      "id": "last-bastion",
+      "name": "Last Bastion",
+      "role": "tank",
+      "slot": "ultimate",
+      "rarity": "Epic",
+      "startingCopy": true,
+      "acquisitionProfile": "tank",
+      "chargeSource": "damageAbsorbed",
+      "abilities": [
+        { "id": "last-bastion", "name": "Last Bastion", "taunt": "allEnemies", "temporaryHp": 30, "damageReduction": 0.4, "duration": 6 }
+      ]
+    },
+    {
+      "id": "dawn-staff",
+      "name": "Dawn Staff",
+      "role": "healer",
+      "slot": "mainWeapon",
+      "rarity": "Common",
+      "startingCopy": true,
+      "acquisitionProfile": "healer",
+      "auto": { "type": "healing", "amount": 4, "rate": 1.5 },
+      "abilities": [
+        { "id": "mend", "name": "Mend", "healing": 18, "target": "ally", "cooldown": 4 },
+        { "id": "renewal", "name": "Renewal", "healing": 10, "target": "allAllies", "healDuration": 4, "cooldown": 12 }
+      ]
+    },
+    {
+      "id": "acolytes-tome",
+      "name": "Acolyte's Tome",
+      "role": "healer",
+      "slot": "offhand",
+      "rarity": "Uncommon",
+      "startingCopy": true,
+      "acquisitionProfile": "healer",
+      "abilities": [
+        { "id": "barrier", "name": "Barrier", "target": "ally", "damageReduction": 0.4, "duration": 5, "cooldown": 10 },
+        { "id": "purify", "name": "Purify", "target": "ally", "cleanse": 1, "healing": 8, "cooldown": 8 }
+      ]
+    },
+    {
+      "id": "rescue",
+      "name": "Rescue",
+      "role": "healer",
+      "slot": "utility",
+      "rarity": "Rare",
+      "startingCopy": true,
+      "acquisitionProfile": "healer",
+      "abilities": [
+        { "id": "rescue", "name": "Rescue", "target": "ally", "moveTargetAdjacent": true, "shield": 12, "cooldown": 10 }
+      ]
+    },
+    {
+      "id": "divine-intervention",
+      "name": "Divine Intervention",
+      "role": "healer",
+      "slot": "ultimate",
+      "rarity": "Epic",
+      "startingCopy": true,
+      "acquisitionProfile": "healer",
+      "chargeSource": "effectiveHealing",
+      "abilities": [
+        { "id": "divine-intervention", "name": "Divine Intervention", "healing": 30, "target": "allLivingAllies", "reviveCount": 1, "reviveHp": 35 }
+      ]
+    },
+    {
+      "id": "soldiers-sword",
+      "name": "Soldier's Sword",
+      "role": "melee",
+      "slot": "mainWeapon",
+      "rarity": "Common",
+      "startingCopy": true,
+      "acquisitionProfile": "melee",
+      "auto": { "type": "damage", "amount": 5, "rate": 1.25 },
+      "abilities": [
+        { "id": "lunge", "name": "Lunge", "damage": 18, "target": "enemy", "cooldown": 4 },
+        { "id": "cleave", "name": "Cleave", "damage": 14, "adjacentDamage": 8, "target": "enemy", "cooldown": 8 }
+      ]
+    },
+    {
+      "id": "parrying-dagger",
+      "name": "Parrying Dagger",
+      "role": "melee",
+      "slot": "offhand",
+      "rarity": "Uncommon",
+      "startingCopy": true,
+      "acquisitionProfile": "melee",
+      "abilities": [
+        { "id": "pummel", "name": "Pummel", "damage": 8, "interrupt": true, "target": "enemy", "cooldown": 8 },
+        { "id": "riposte", "name": "Riposte", "damageReduction": 0.4, "duration": 4, "counterDamage": 12, "counterLimit": 1, "cooldown": 10 }
+      ]
+    },
+    {
+      "id": "pursuit",
+      "name": "Pursuit",
+      "role": "melee",
+      "slot": "utility",
+      "rarity": "Rare",
+      "startingCopy": true,
+      "acquisitionProfile": "melee",
+      "abilities": [
+        { "id": "pursuit", "name": "Pursuit", "moveRange": 3, "target": "enemy", "preventDistanceIncrease": true, "duration": 3, "cooldown": 8 }
+      ]
+    },
+    {
+      "id": "whirlwind",
+      "name": "Whirlwind",
+      "role": "melee",
+      "slot": "ultimate",
+      "rarity": "Epic",
+      "startingCopy": true,
+      "acquisitionProfile": "melee",
+      "chargeSource": "damageDealt",
+      "abilities": [
+        { "id": "whirlwind", "name": "Whirlwind", "damage": 15, "hits": 2, "radius": 1, "target": "nearbyEnemies" }
+      ]
+    },
+    {
+      "id": "warren-bow",
+      "name": "Warren Bow",
+      "role": "hunter",
+      "slot": "mainWeapon",
+      "rarity": "Common",
+      "startingCopy": true,
+      "acquisitionProfile": "hunter",
+      "auto": { "type": "damage", "amount": 5, "rate": 1.5 },
+      "abilities": [
+        { "id": "aimed-shot", "name": "Aimed Shot", "damage": 18, "range": 3, "target": "enemy", "cooldown": 4 },
+        { "id": "volley", "name": "Volley", "damage": 12, "target": "enemyRow", "cooldown": 10 }
+      ]
+    },
+    {
+      "id": "trackers-quiver",
+      "name": "Tracker's Quiver",
+      "role": "hunter",
+      "slot": "offhand",
+      "rarity": "Uncommon",
+      "startingCopy": true,
+      "acquisitionProfile": "hunter",
+      "abilities": [
+        { "id": "pinning-shot", "name": "Pinning Shot", "damage": 10, "rootDuration": 3, "target": "enemy", "cooldown": 8 },
+        { "id": "hunters-mark", "name": "Hunter's Mark", "damageBonus": 0.25, "duration": 8, "target": "enemy", "cooldown": 12 }
+      ]
+    },
+    {
+      "id": "disengage",
+      "name": "Disengage",
+      "role": "hunter",
+      "slot": "utility",
+      "rarity": "Rare",
+      "startingCopy": true,
+      "acquisitionProfile": "hunter",
+      "abilities": [
+        { "id": "disengage", "name": "Disengage", "moveRange": 2, "moveDirection": "awayFromNearestEnemy", "evasion": 0.4, "duration": 3, "cooldown": 8 }
+      ]
+    },
+    {
+      "id": "rain-of-arrows",
+      "name": "Rain of Arrows",
+      "role": "hunter",
+      "slot": "ultimate",
+      "rarity": "Epic",
+      "startingCopy": true,
+      "acquisitionProfile": "hunter",
+      "chargeSource": "damageDealt",
+      "abilities": [
+        { "id": "rain-of-arrows", "name": "Rain of Arrows", "target": "area2x2", "delay": 1.5, "damage": 10, "hits": 3 }
+      ]
+    },
+    {
+      "id": "ember-wand",
+      "name": "Ember Wand",
+      "role": "caster",
+      "slot": "mainWeapon",
+      "rarity": "Common",
+      "startingCopy": true,
+      "acquisitionProfile": "caster",
+      "auto": { "type": "damage", "amount": 6, "rate": 2 },
+      "abilities": [
+        { "id": "arc-bolt", "name": "Arc Bolt", "damage": 20, "castTime": 1.2, "interruptible": true, "target": "enemy", "cooldown": 5 },
+        { "id": "ember-wave", "name": "Ember Wave", "damage": 12, "castTime": 1.4, "interruptible": true, "target": "allEnemies", "cooldown": 15 }
+      ]
+    },
+    {
+      "id": "apprentice-spellbook",
+      "name": "Apprentice Spellbook",
+      "role": "caster",
+      "slot": "offhand",
+      "rarity": "Uncommon",
+      "startingCopy": true,
+      "acquisitionProfile": "caster",
+      "abilities": [
+        { "id": "spellbreak", "name": "Spellbreak", "interrupt": true, "castingLockout": 2, "target": "enemy", "cooldown": 8 },
+        { "id": "focus-ward", "name": "Focus Ward", "shield": 18, "castTime": 1, "interruptible": true, "target": "self", "cooldown": 12 }
+      ]
+    },
+    {
+      "id": "blink",
+      "name": "Blink",
+      "role": "caster",
+      "slot": "utility",
+      "rarity": "Rare",
+      "startingCopy": true,
+      "acquisitionProfile": "caster",
+      "abilities": [
+        { "id": "blink", "name": "Blink", "move": "anyEmptySquareOnOwnHalf", "cooldown": 8 }
+      ]
+    },
+    {
+      "id": "meteor",
+      "name": "Meteor",
+      "role": "caster",
+      "slot": "ultimate",
+      "rarity": "Epic",
+      "startingCopy": true,
+      "acquisitionProfile": "caster",
+      "chargeSource": "damageDealt",
+      "abilities": [
+        { "id": "meteor", "name": "Meteor", "target": "area2x2", "damage": 40, "castTime": 2, "interruptible": true }
+      ]
+    }
+  ]
+}
