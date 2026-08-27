@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Card Combat RPG Prototype</title>
+    <link rel="stylesheet" href="styles.css?v=battle-readable">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="roleScreen" class="screen">
+        <header class="screen-header">
+          <div>
+            <p class="eyebrow">Darkwood Training Pull</p>
+            <h1>Choose Your Role</h1>
+          </div>
+          <div class="topbar-actions">
+            <button id="roleReadyButton" class="primary-button" type="button">Ready</button>
+            <button id="newRunButton" class="icon-text-button hidden" type="button">New Run</button>
+            <button id="minibossButton" class="icon-text-button" type="button">Miniboss</button>
+            <button id="openInventoryFromRole" class="icon-text-button" type="button">Loadout</button>
+          </div>
+        </header>
+        <section class="character-sheet-strip">
+          <h2>Character Sheet</h2>
+          <div id="rolePlayerStatsPanel" class="player-stats-panel"></div>
+        </section>
+        <section>
+          <h2>Battlefield Preview</h2>
+          <div id="roleFormation" class="formation-grid"></div>
+        </section>
+        <div id="roleCards" class="hidden"></div>
+        <div id="enemyPreview" class="hidden"></div>
+      </section>
+
+      <section id="battleScreen" class="screen battle-screen hidden">
+        <div class="combat-topbar">
+          <div>
+            <p class="eyebrow" id="encounterLabel">Room 1 of 8</p>
+            <h1 id="battleTitle">Training Pull</h1>
+            <div id="runTrack" class="run-track" aria-label="Run progress"></div>
+          </div>
+          <div class="topbar-actions">
+            <button id="openInventoryFromBattle" class="icon-text-button" type="button">Loadout</button>
+            <button id="replayButton" class="icon-text-button" type="button">Replay</button>
+          </div>
+        </div>
+
+        <div class="battle-layout">
+          <section class="field-wrap" aria-label="Tactical battlefield">
+            <svg id="targetLines" class="target-lines" aria-hidden="true"></svg>
+            <div id="battlefield" class="battlefield"></div>
+            <div id="countdownOverlay" class="countdown hidden"></div>
+            <div id="resultOverlay" class="result-overlay hidden"></div>
+          </section>
+
+          <aside class="side-panel">
+            <div class="battle-action-row">
+              <section class="target-panel">
+                <span>Current Target</span>
+                <strong id="currentTargetText">None</strong>
+                <div id="targetDetail" class="target-detail"></div>
+              </section>
+              <section class="battle-abilities">
+                <h2>Abilities</h2>
+                <div id="abilityBar" class="ability-bar"></div>
+              </section>
+            </div>
+            <div class="battle-info-row">
+              <section>
+                <h2>Gear &amp; Stats</h2>
+                <div id="playerStatsPanel" class="player-stats-panel"></div>
+              </section>
+              <section>
+                <h2>Live Meter</h2>
+                <div id="meterList" class="meter-list"></div>
+              </section>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="lootScreen" class="screen hidden">
+        <header class="screen-header">
+          <div>
+            <p class="eyebrow" id="lootPrompt">Choose 1 of 3</p>
+            <h1>Personal Loot</h1>
+          </div>
+          <button id="lootConfirmButton" class="primary-button" type="button" disabled>Secure Card</button>
+        </header>
+        <section class="character-sheet-strip">
+          <h2>Character Sheet</h2>
+          <div id="lootPlayerStatsPanel" class="player-stats-panel"></div>
+        </section>
+        <div id="lootChoices" class="loot-grid"></div>
+      </section>
+
+      <section id="runScreen" class="screen hidden">
+        <header class="screen-header">
+          <div>
+            <p class="eyebrow">Run Complete</p>
+            <h1 id="runTitle">Darkwood Warren Cleared</h1>
+          </div>
+          <button id="returnToCampButton" class="primary-button" type="button">Return to Camp</button>
+        </header>
+        <div id="runSummary" class="run-summary"></div>
+        <section>
+          <h2>Cards Secured This Run</h2>
+          <ul id="runCards" class="run-card-list"></ul>
+        </section>
+      </section>
+
+      <section id="equipScreen" class="screen hidden">
+        <header class="screen-header">
+          <div>
+            <p class="eyebrow">Card Added</p>
+            <h1>Equip Your Loot</h1>
+          </div>
+          <button id="nextFightButton" class="primary-button" type="button">Enter Fight 2</button>
+        </header>
+        <section class="character-sheet-strip">
+          <h2>Character Sheet</h2>
+          <div id="equipPlayerStatsPanel" class="player-stats-panel"></div>
+        </section>
+        <div class="inventory-layout">
+          <section>
+            <h2>Equipment</h2>
+            <div id="equipSlots" class="slot-grid"></div>
+          </section>
+          <section>
+            <h2>Collection</h2>
+            <div id="collectionCards" class="collection-list"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="inventoryDialog" class="modal">
+      <div class="modal-header">
+        <h1>Collection</h1>
+        <button id="closeInventory" class="icon-text-button" type="button">Close</button>
+      </div>
+      <section class="collection-character-sheet">
+        <h2>Character Sheet</h2>
+        <div id="modalCharacterSheet" class="player-stats-panel"></div>
+      </section>
+      <div class="inventory-layout">
+        <section>
+          <h2>Equipment</h2>
+          <div id="modalEquipSlots" class="slot-grid"></div>
+        </section>
+        <section>
+          <h2>Owned Cards</h2>
+          <div id="modalCollectionCards" class="collection-list"></div>
+        </section>
+      </div>
+    </dialog>
+
+    <script src="game.js?v=battlefield-2x3"></script>
+    <script src="loot/card-system.js"></script>
+  </body>
+</html>
