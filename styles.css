@@ -3532,3 +3532,109 @@ body:has(#lootScreen:not(.hidden)) .app-shell {
   font-size: 11px;
   line-height: 1.05;
 }
+
+/* Battle view: readable on-phone typography without page scrolling. */
+body:has(#battleScreen:not(.hidden)),
+body:has(#battleScreen:not(.hidden)) .app-shell {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#battleScreen:not(.hidden) {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 5px;
+  height: 100dvh;
+  min-height: 0;
+  padding: 6px;
+  overflow: hidden;
+}
+
+#battleScreen .combat-topbar {
+  margin: 0;
+}
+
+#battleScreen .combat-topbar h1 {
+  font-size: 20px;
+}
+
+#battleScreen .combat-topbar .eyebrow,
+#battleScreen .run-track,
+#battleScreen .topbar-actions button {
+  font-size: 12px;
+}
+
+#battleScreen .battle-layout {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 5px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#battleScreen .field-wrap {
+  min-height: 0;
+  overflow: hidden;
+}
+
+#battleScreen .side-panel {
+  position: static;
+  gap: 0;
+  padding: 4px;
+}
+
+#battleScreen .battle-info-row {
+  display: none;
+}
+
+#battleScreen .battle-card-head span,
+#battleScreen .battle-card-health span,
+#battleScreen .battle-card-conditions > span,
+#battleScreen .battle-card-target > span {
+  font-size: 9px;
+}
+
+#battleScreen .battle-card-head strong {
+  font-size: 14px;
+}
+
+#battleScreen .battle-card-head small,
+#battleScreen .battle-card-target strong,
+#battleScreen .battle-card-target small,
+#battleScreen .battle-card-conditions small {
+  font-size: 10px;
+}
+
+#battleScreen .battle-card-health > strong {
+  font-size: 11px;
+}
+
+#battleScreen .battle-action-row .target-panel > span,
+#battleScreen .battle-action-row .target-detail {
+  font-size: 12px;
+}
+
+#battleScreen .battle-action-row .target-panel > strong {
+  font-size: 14px;
+  line-height: 1.1;
+}
+
+#battleScreen .battle-abilities h2 {
+  font-size: 12px;
+}
+
+#battleScreen .battle-action-row .ability-button {
+  min-height: 54px;
+  padding: 3px;
+}
+
+#battleScreen .battle-action-row .ability-button strong {
+  font-size: 13px;
+  line-height: 1.05;
+}
+
+#battleScreen .battle-action-row .ability-button small {
+  font-size: 11px;
+  line-height: 1.05;
+}
