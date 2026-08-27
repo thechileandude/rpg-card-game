@@ -3750,3 +3750,88 @@ body:has(#battleScreen:not(.hidden)) .app-shell {
 #battleScreen .battle-action-row .ability-button {
   min-height: 62px;
 }
+
+#battleScreen .combat-topbar .topbar-actions {
+  flex-basis: 132px;
+  gap: 4px;
+}
+
+#battleScreen .combat-topbar .topbar-actions button {
+  min-height: 30px;
+  padding: 0 6px;
+  font-size: 11px;
+}
+
+#battleScreen .field-wrap,
+#battleScreen .battlefield {
+  height: 100%;
+}
+
+#battleScreen .battlefield {
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  align-content: stretch;
+}
+
+#battleScreen .battlefield .cell,
+#battleScreen .battlefield .unit-card {
+  height: 100%;
+  min-height: 0;
+}
+
+#battleScreen .battle-card-conditions div {
+  margin-top: 0;
+}
+
+#battleScreen .battlefield-target-panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 7px;
+  width: calc(100% - 28px);
+  padding: 5px 7px;
+  transform: translate(-50%, -50%);
+  background: rgba(251, 246, 234, 0.94);
+}
+
+#battleScreen .battlefield-target-panel > span,
+#battleScreen .battlefield-target-panel > strong {
+  display: block;
+  margin: 0;
+  align-self: center;
+  font-size: 13px;
+  line-height: 1.05;
+}
+
+#battleScreen .battlefield-target-panel > strong {
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#battleScreen .battlefield-target-panel .target-detail {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 3px;
+}
+
+#battleScreen .battlefield-target-panel .target-detail div {
+  display: block;
+  min-width: 0;
+}
+
+#battleScreen .battle-action-row .ability-button {
+  min-height: 82px;
+  padding: 5px 3px;
+}
+
+@media (max-width: 400px) {
+  :root {
+    --battle-cell-width: calc((100vw - 44px) / 3);
+    --battle-cell-height: 120px;
+  }
+}

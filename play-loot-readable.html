@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Card Combat RPG Prototype</title>
-    <link rel="stylesheet" href="styles.css?v=abilities-one-row">
+    <link rel="stylesheet" href="styles.css?v=expanded-arena">
   </head>
   <body>
     <main class="app-shell">
@@ -50,17 +50,17 @@
           <section class="field-wrap" aria-label="Tactical battlefield">
             <svg id="targetLines" class="target-lines" aria-hidden="true"></svg>
             <div id="battlefield" class="battlefield"></div>
+            <section class="target-panel battlefield-target-panel">
+              <span>Current Target</span>
+              <strong id="currentTargetText">None</strong>
+              <div id="targetDetail" class="target-detail"></div>
+            </section>
             <div id="countdownOverlay" class="countdown hidden"></div>
             <div id="resultOverlay" class="result-overlay hidden"></div>
           </section>
 
           <aside class="side-panel">
             <div class="battle-action-row">
-              <section class="target-panel">
-                <span>Current Target</span>
-                <strong id="currentTargetText">None</strong>
-                <div id="targetDetail" class="target-detail"></div>
-              </section>
               <section class="battle-abilities">
                 <h2>Abilities</h2>
                 <div id="abilityBar" class="ability-bar"></div>

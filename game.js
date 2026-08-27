@@ -2495,7 +2495,6 @@ function renderUnitCard(unit) {
       <div class="hp-bar"><i style="width:${hpPct}%"></i></div>
     </div>
     <div class="battle-card-conditions">
-      <span>Conditions</span>
       <div>${conditions.length ? conditions.map((condition) => `<small>${condition}</small>`).join("") : `<small>None</small>`}</div>
     </div>
     <div class="token-pips">${pips.map((p) => `<i class="pip ${p.cls}" title="${p.title}">${p.ch}</i>`).join("")}</div>
