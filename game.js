@@ -2492,7 +2492,7 @@ function renderUnitCard(unit) {
       <small>${target ? `${Math.ceil(target.hp)}/${target.maxHp}` : "-"}${target?.cast ? ` · ${target.cast.name}` : ""}</small>
     </div>
     <div class="battle-card-health">
-      <span>Health</span><strong>${Math.ceil(unit.hp)}/${unit.maxHp}</strong>
+      <strong>${Math.ceil(unit.hp)}/${unit.maxHp}</strong>
       <div class="hp-bar"><i style="width:${hpPct}%"></i></div>
     </div>
     <div class="battle-card-conditions">
