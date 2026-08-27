@@ -3369,3 +3369,26 @@ body {
 #roleScreen * {
   font-size: 14px !important;
 }
+
+#roleScreen .enemy-lineup .role-enemy-card {
+  min-height: 0;
+  padding: 5px;
+  gap: 2px;
+  align-content: start;
+}
+
+#roleScreen .enemy-lineup .unit-card-owner {
+  margin: 0;
+  line-height: 1;
+}
+
+#roleScreen .enemy-lineup .role-enemy-title {
+  padding-bottom: 2px;
+  line-height: 1;
+}
+
+#roleScreen .enemy-lineup .role-enemy-card ul {
+  gap: 0;
+  margin: 2px 0 0;
+  line-height: 1;
+}
