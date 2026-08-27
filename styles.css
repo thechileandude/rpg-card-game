@@ -3835,3 +3835,58 @@ body:has(#battleScreen:not(.hidden)) .app-shell {
     --battle-cell-height: 120px;
   }
 }
+
+#battleScreen .combat-topbar .topbar-actions {
+  flex-basis: 116px;
+}
+
+#battleScreen .combat-topbar .topbar-actions button {
+  min-height: 26px;
+  padding: 0 4px;
+  font-size: 10px;
+}
+
+#battleScreen .battlefield {
+  gap: 3px;
+  padding: 4px;
+}
+
+#battleScreen .battlefield .cell,
+#battleScreen .battlefield .unit-card {
+  width: 100%;
+  min-width: 0;
+}
+
+#battleScreen .battlefield-target-panel {
+  top: 7px;
+  width: calc(100% - 16px);
+  min-height: 34px;
+  padding: 5px 7px;
+  transform: translateX(-50%);
+}
+
+#battleScreen .battlefield-target-panel > span {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#battleScreen .battlefield-target-panel > strong {
+  font-size: 14px;
+}
+
+#battleScreen .battlefield-target-panel .target-detail {
+  display: none;
+}
+
+#battleScreen .battle-action-row .ability-button {
+  min-height: 92px;
+  padding: 7px 3px;
+}
+
+#battleScreen .battle-action-row .ability-button strong {
+  font-size: 14px;
+}
+
+#battleScreen .battle-action-row .ability-button small {
+  font-size: 12px;
+}
