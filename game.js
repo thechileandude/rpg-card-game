@@ -717,6 +717,11 @@ const ui = {
   modalCollectionCards: document.querySelector("#modalCollectionCards"),
   inventoryDialog: document.querySelector("#inventoryDialog"),
   closeInventory: document.querySelector("#closeInventory"),
+  cardDetailDialog: document.querySelector("#cardDetailDialog"),
+  cardDetailRarity: document.querySelector("#cardDetailRarity"),
+  cardDetailTitle: document.querySelector("#cardDetailTitle"),
+  cardDetailContent: document.querySelector("#cardDetailContent"),
+  closeCardDetail: document.querySelector("#closeCardDetail"),
   roleReadyButton: document.querySelector("#roleReadyButton"),
   newRunButton: document.querySelector("#newRunButton"),
   nextFightButton: document.querySelector("#nextFightButton"),
@@ -2913,6 +2918,15 @@ function renderInventory(slotRoot = ui.modalEquipSlots, cardRoot = ui.modalColle
     const div = document.createElement("div");
     div.className = "slot";
     div.innerHTML = `<span>${slot}</span><strong>${item ? item.name : "Empty"}</strong>`;
+    if (item) {
+      div.classList.add("selectable-card");
+      div.tabIndex = 0;
+      div.setAttribute("role", "button");
+      div.addEventListener("click", () => openCardDetails(item));
+      div.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") openCardDetails(item);
+      });
+    }
     slotRoot.append(div);
   });
   cardRoot.innerHTML = "";
@@ -2924,33 +2938,75 @@ function renderInventory(slotRoot = ui.modalEquipSlots, cardRoot = ui.modalColle
     const item = items[entry.itemId];
     if (!item) return;
     const article = document.createElement("article");
-    article.className = `collection-card rarity-${item.rarity.toLowerCase()}`;
+    article.className = `collection-card selectable-card rarity-${item.rarity.toLowerCase()}`;
+    article.tabIndex = 0;
+    article.setAttribute("role", "button");
     article.innerHTML = `
       <div>
         <h3>${item.name} x${entry.quantity}</h3>
         <p>${item.slot} · ${item.description}</p>
       </div>
     `;
-    const equip = document.createElement("button");
-    equip.type = "button";
-    equip.textContent = state.equipped[item.slot] === item.id ? "Equipped" : "Equip";
-    equip.addEventListener("click", () => {
-      state.equipped[item.slot] = item.id;
+    article.addEventListener("click", () => openCardDetails(item));
+    article.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") openCardDetails(item);
+    });
+    const action = document.createElement("button");
+    action.type = "button";
+    const isEquipped = state.equipped[item.slot] === item.id;
+    action.textContent = isEquipped ? "Unequip" : "Equip";
+    action.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (isEquipped) delete state.equipped[item.slot];
+      else state.equipped[item.slot] = item.id;
       saveGame();
       renderInventory(slotRoot, cardRoot);
     });
-    const unequip = document.createElement("button");
-    unequip.type = "button";
-    unequip.textContent = "Unequip";
-    unequip.disabled = state.equipped[item.slot] !== item.id;
-    unequip.addEventListener("click", () => {
-      delete state.equipped[item.slot];
-      saveGame();
-      renderInventory(slotRoot, cardRoot);
-    });
-    article.append(equip, unequip);
+    article.append(action);
     cardRoot.append(article);
   });
+}
+
+function cardValueLabel(key) {
+  return key.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase());
+}
+
+function cardValueText(key, value) {
+  if (typeof value === "boolean") return value ? cardValueLabel(key) : "";
+  if (key === "damageReduction" || key === "redirectDamage" || key === "evasion") return `${Math.round(value * 100)}%`;
+  if (["cooldown", "duration", "stunDuration", "castTime", "rootDuration"].includes(key)) return `${value}s`;
+  return String(value);
+}
+
+function cardAbilityText(ability) {
+  const ignored = new Set(["id", "name", "target"]);
+  return Object.entries(ability)
+    .filter(([key, value]) => !ignored.has(key) && value !== false && value !== null && value !== undefined)
+    .map(([key, value]) => {
+      const text = cardValueText(key, value);
+      return text === cardValueLabel(key) ? text : `${cardValueLabel(key)} ${text}`;
+    })
+    .filter(Boolean)
+    .join(" · ");
+}
+
+function openCardDetails(item) {
+  ui.cardDetailRarity.textContent = `${item.rarity} · ${item.slot}`;
+  ui.cardDetailTitle.textContent = item.name;
+  const abilities = item.abilities || [];
+  const statBonuses = Object.entries(item.stats || {});
+  ui.cardDetailContent.innerHTML = `
+    <p class="card-detail-rules">${item.description}</p>
+    ${item.auto ? `<section><h2>Auto Attack</h2><p class="card-detail-rule">${cardValueLabel(item.auto.type)} ${item.auto.amount} · Rate ${item.auto.rate}s</p></section>` : ""}
+    ${statBonuses.length ? `<section><h2>Bonuses</h2><div class="card-detail-bonuses">${statBonuses.map(([key, value]) => `<p><strong>${cardValueLabel(key)}</strong><span>${cardValueText(key, value)}</span></p>`).join("")}</div></section>` : ""}
+    <section>
+      <h2>${abilities.length ? "Abilities" : "Card Effect"}</h2>
+      <div class="card-detail-abilities">
+        ${abilities.length ? abilities.map((ability) => `<article><h3>${ability.name}</h3><p>${cardAbilityText(ability)}</p></article>`).join("") : `<article><p>${item.description}</p></article>`}
+      </div>
+    </section>
+  `;
+  ui.cardDetailDialog.showModal();
 }
 
 function openInventory() {
@@ -3030,6 +3086,7 @@ ui.replayButton.addEventListener("click", () => enterRoom(state.run?.roomIndex ?
 ui.openInventoryFromRole.addEventListener("click", openInventory);
 ui.openInventoryFromBattle.addEventListener("click", openInventory);
 ui.closeInventory.addEventListener("click", () => ui.inventoryDialog.close());
+ui.closeCardDetail.addEventListener("click", () => ui.cardDetailDialog.close());
 ui.battlefield.addEventListener("pointerdown", (event) => {
   const token = event.target.closest(".unit-card");
   const cell = event.target.closest(".cell");

@@ -2955,6 +2955,118 @@ body {
   grid-template-columns: 1fr;
 }
 
+/* Readable loadout summary and tap-for-details cards. */
+#equipScreen .character-sheet-strip {
+  display: grid;
+  gap: 5px;
+}
+
+#equipScreen .player-stats-panel {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  width: 100%;
+  gap: 7px;
+}
+
+#equipScreen .gear-mini-list {
+  max-width: none;
+}
+
+#equipScreen .stat-mini-row {
+  grid-template-columns: 58px repeat(3, 38px);
+  min-height: 22px;
+  font-size: 11px;
+}
+
+#equipScreen .gear-mini-list div {
+  grid-template-columns: 62px minmax(0, 1fr);
+  min-height: 29px;
+  padding: 4px 5px;
+  font-size: 11px;
+  line-height: 1.15;
+}
+
+#equipScreen .slot span,
+#equipScreen .collection-card p {
+  font-size: 12px;
+}
+
+#equipScreen .slot strong,
+#equipScreen .collection-card h3 {
+  font-size: 14px;
+}
+
+#equipScreen .collection-card button {
+  min-height: 34px;
+  font-size: 12px;
+}
+
+.selectable-card {
+  cursor: pointer;
+}
+
+.selectable-card:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.card-detail-modal {
+  width: min(390px, calc(100vw - 18px));
+  max-height: calc(100dvh - 24px);
+  padding: 12px;
+}
+
+.card-detail-content,
+.card-detail-content section,
+.card-detail-abilities,
+.card-detail-bonuses {
+  display: grid;
+  gap: 8px;
+}
+
+.card-detail-content h2 {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: var(--gold);
+}
+
+.card-detail-rules,
+.card-detail-rule,
+.card-detail-abilities p,
+.card-detail-bonuses p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.card-detail-abilities {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card-detail-abilities article {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+}
+
+.card-detail-abilities h3 {
+  margin: 0 0 5px;
+  font-size: 16px;
+}
+
+.card-detail-bonuses {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card-detail-bonuses p {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px;
+  border: 1px solid var(--line);
+}
+
 /* Battle units use compact information cards inside the existing 4x4 grid. */
 .battlefield .unit-card.unit-token {
   position: relative;

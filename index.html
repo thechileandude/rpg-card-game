@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Card Combat RPG Prototype</title>
-    <link rel="stylesheet" href="styles.css?v=expanded-arena-2">
+    <link rel="stylesheet" href="styles.css?v=equip-card-details">
   </head>
   <body>
     <main class="app-shell">
@@ -156,7 +156,18 @@
       </div>
     </dialog>
 
-    <script src="game.js?v=no-team-labels"></script>
+    <dialog id="cardDetailDialog" class="modal card-detail-modal">
+      <div class="modal-header">
+        <div>
+          <p id="cardDetailRarity" class="eyebrow"></p>
+          <h1 id="cardDetailTitle">Card Details</h1>
+        </div>
+        <button id="closeCardDetail" class="icon-text-button" type="button">Close</button>
+      </div>
+      <div id="cardDetailContent" class="card-detail-content"></div>
+    </dialog>
+
+    <script src="game.js?v=equip-card-details"></script>
     <script src="loot/card-system.js"></script>
   </body>
 </html>
