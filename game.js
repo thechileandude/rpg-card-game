@@ -557,6 +557,7 @@ const encounterLibrary = {
     enemyDamageMultiplier: 0.85,
     lootPool: bossLootPool,
     squareAttack: { interval: 7, delay: 2.4, damage: 22, sourceName: "Brackenjaw", castName: "Brackenjaw Crush" },
+    respawnAdds: { delay: 15, firstDelay: 5, sourceName: "Brackenjaw", randomAdd: true },
     enemies: [
       { roleId: "caster", name: "Ashcaller", slotKey: "enemyDamageA", positionKey: "enemyDamageBackA", hpMultiplier: 1.05 },
       { roleId: "healer", name: "Dawn Acolyte", slotKey: "enemyHealer", hpMultiplier: 1.15 },
@@ -570,7 +571,7 @@ const encounterLibrary = {
     enemyDamageMultiplier: 0.85,
     lootPool: bossLootPool,
     squareAttack: { interval: 7, delay: 2.4, damage: 24, sourceName: "Hollowroot", castName: "Root Rupture" },
-    respawnAdds: { delay: 17, sourceName: "Hollowroot" },
+    respawnAdds: { delay: 15, firstDelay: 5, sourceName: "Hollowroot", randomAdd: true },
     enemies: [
       { roleId: "caster", name: "Rootcaller", slotKey: "enemyDamageA", positionKey: "enemyDamageBackA", hpMultiplier: 1.1 },
       { roleId: "healer", name: "Sap Tender", slotKey: "enemyHealer", hpMultiplier: 1.2 },
@@ -584,7 +585,7 @@ const encounterLibrary = {
     enemyDamageMultiplier: 0.85,
     lootPool: bossLootPool,
     squareAttack: { interval: 7, delay: 2.4, damage: 22, sourceName: "Taskmaster", castName: "Lash the Ground" },
-    respawnAdds: { delay: 17, sourceName: "Taskmaster" },
+    respawnAdds: { delay: 15, firstDelay: 5, sourceName: "Taskmaster", randomAdd: true },
     enemies: [
       { roleId: "hunter", name: "Pressgang Archer", slotKey: "enemyDamageA", positionKey: "enemyDamageBackC", hpMultiplier: 1.05 },
       { roleId: "healer", name: "Warren Ratcaller", slotKey: "enemyHealer", hpMultiplier: 1.15 },
@@ -1243,7 +1244,10 @@ function enterRoom(index = state.run?.roomIndex ?? 0) {
   }
   if (!state.enemyDpsVariants) state.enemyDpsVariants = rollEnemyDpsVariants();
   const allies = currentAllyFormation();
-  const enemies = currentEnemyFormation(encounter);
+  const encounterEnemies = currentEnemyFormation(encounter);
+  const enemies = encounter.respawnAdds?.firstDelay
+    ? encounterEnemies.filter((entry) => entry.name === encounter.respawnAdds.sourceName)
+    : encounterEnemies;
   state.units = [
     ...enemies.map((entry) => createUnit(entry.roleId, "enemy", entry.name, entry.slotKey, encounter.enemyHpMultiplier * (entry.hpMultiplier || 1), entry.positionKey || entry.slotKey, entry, encounter.enemyDamageMultiplier ?? 1)),
     ...allies.map((entry) => createUnit(entry.roleId, "ally", entry.name, entry.slotKey, 1, entry.positionKey || entry.slotKey, entry))
@@ -1263,6 +1267,7 @@ function enterRoom(index = state.run?.roomIndex ?? 0) {
   state.pendingReposition = null;
   state.squareAttacks = [];
   state.respawnQueue = [];
+  if (encounter.respawnAdds?.firstDelay) queueBossAdd(encounter.respawnAdds.firstDelay);
   state.floaters = [];
   state.squareAttackTimer = encounter.squareAttack ? encounter.squareAttack.interval * 0.55 : 0;
   state.enrageTimer = encounter.enrage ? encounter.enrage.firstAt : 0;
@@ -1447,6 +1452,31 @@ function isRespawnableBossAdd(unit) {
 
 function randomEntry(list) {
   return list[Math.floor(Math.random() * list.length)];
+}
+
+function randomBossAddEntry() {
+  const choices = [
+    { roleId: "healer", name: "Boss Acolyte", positionKey: "enemyHealer" },
+    { roleId: "dps", name: "Boss Blade", positionKey: "enemyDamageFrontB" },
+    { roleId: "caster", name: "Boss Hexer", positionKey: "enemyDamageBackA" },
+    { roleId: "hunter", name: "Boss Archer", positionKey: "enemyDamageBackB" }
+  ];
+  return { ...randomEntry(choices), slotKey: "bossAdd", hpMultiplier: 1 };
+}
+
+function queueBossAdd(delay) {
+  const mechanic = currentEncounter().respawnAdds;
+  if (!mechanic || state.respawnQueue.length || state.units.some((unit) => isRespawnableBossAdd(unit) && !unit.dead)) return;
+  const entry = randomBossAddEntry();
+  const position = respawnPositionFor(entry, positions.enemyDamageBackA);
+  state.respawnQueue.push({
+    slotKey: entry.slotKey,
+    entry,
+    row: position.row,
+    col: position.col,
+    timer: delay,
+    maxTimer: delay
+  });
 }
 
 function respawnEntryFor(unit) {
@@ -1679,6 +1709,10 @@ function applyDamage(source, target, amount) {
 
 function scheduleRespawn(unit) {
   const mechanic = currentEncounter().respawnAdds;
+  if (mechanic?.randomAdd) {
+    queueBossAdd(mechanic.delay);
+    return;
+  }
   const alreadyQueued = state.respawnQueue.some((respawn) => respawn.slotKey === unit.encounterEntry.slotKey);
   if (!mechanic || alreadyQueued) return;
   const entry = respawnEntryFor(unit);
@@ -2232,6 +2266,7 @@ function updateRespawns(dt) {
   const ready = state.respawnQueue.filter((respawn) => respawn.timer <= 0);
   state.respawnQueue = state.respawnQueue.filter((respawn) => respawn.timer > 0);
   ready.forEach((respawn) => {
+    if (mechanic.randomAdd && state.units.some((unit) => isRespawnableBossAdd(unit) && !unit.dead)) return;
     const entry = respawn.entry;
     if (unitAt(respawn.row, respawn.col)) {
       respawn.timer = 1;
@@ -2476,33 +2511,18 @@ function renderUnitCard(unit) {
     const pop = f.t < 0.12 ? 1 + (0.12 - f.t) * 2.5 : 1;
     return `<span class="floater ${f.kind}" style="transform:translate(-50%,-${rise}px) scale(${pop.toFixed(2)});opacity:${fade.toFixed(2)}">${f.text}</span>`;
   }).join("");
-  const conditions = unitStatuses(unit);
-  const target = unitById(unit.targetId);
-  const targetHpPct = target ? Math.max(0, (target.hp / target.maxHp) * 100) : 0;
   token.innerHTML = `
-    <svg class="ultimate-border" viewBox="0 0 100 120" preserveAspectRatio="none" aria-hidden="true">
-      <rect class="ultimate-border-track" x="1.5" y="1.5" width="97" height="117" rx="4" pathLength="100"></rect>
-      <rect class="ultimate-border-fill" x="1.5" y="1.5" width="97" height="117" rx="4" pathLength="100" style="stroke-dasharray:${ultimatePct} 100"></rect>
-    </svg>
-    <div class="battle-card-head">
-      ${unit.isPlayer ? "<span>You</span>" : ""}
-      <strong>${art.label}</strong>
-      <small>${unit.name}</small>
-    </div>
-    <div class="battle-card-target ${target ? "has-target" : ""}">
-      <span>Target</span>
-      <strong>${target ? target.name : "None"}</strong>
-      <div><i style="width:${targetHpPct}%"></i></div>
-      <small>${target ? `${Math.ceil(target.hp)}/${target.maxHp}` : "-"}${target?.cast ? ` · ${target.cast.name}` : ""}</small>
-    </div>
-    <div class="battle-card-health">
-      <strong>${Math.ceil(unit.hp)}/${unit.maxHp}</strong>
-      <div class="hp-bar"><i style="width:${hpPct}%"></i></div>
-    </div>
-    <div class="battle-card-conditions">
-      <div>${conditions.length ? conditions.map((condition) => `<small>${condition}</small>`).join("") : `<small>None</small>`}</div>
-    </div>
     <div class="token-pips">${pips.map((p) => `<i class="pip ${p.cls}" title="${p.title}">${p.ch}</i>`).join("")}</div>
+    <div class="token-shape">
+      <svg class="ultimate-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <rect class="ultimate-border-track" x="2" y="2" width="96" height="96" pathLength="100"></rect>
+        <rect class="ultimate-border-fill" x="2" y="2" width="96" height="96" pathLength="100" style="stroke-dasharray:${ultimatePct} 100"></rect>
+      </svg>
+      <span class="token-symbol">${art.symbol}</span>
+    </div>
+    <div class="token-name">${unit.name}</div>
+    <div class="hp-bar"><span style="width:${hpPct}%"></span></div>
+    <div class="token-hp">${Math.ceil(unit.hp)}/${unit.maxHp}</div>
     ${
       unit.cast || unit.interruptMessageTimer > 0
         ? `<div class="cast-track"><span style="width:${unit.interruptMessageTimer > 0 ? 100 : castProgress}%"></span><strong>${castLabel}</strong></div>`

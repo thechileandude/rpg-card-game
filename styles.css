@@ -2745,11 +2745,13 @@ body {
 
 .battlefield .unit-token .token-name {
   max-width: 100%;
+  overflow: hidden;
   font-size: 9px;
   font-weight: 800;
   line-height: 1.1;
   text-align: center;
-  overflow-wrap: break-word;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .battlefield .unit-token.wide .token-name { font-size: 12px; }
@@ -2880,7 +2882,7 @@ body {
    grid row and collided with the name. Reserve a fixed row and size the rotated
    shapes to fit inside it. */
 .battlefield .unit-token {
-  grid-template-rows: 12px 58px 14px 5px 10px 12px;
+  grid-template-rows: 10px 52px 12px 5px 9px 11px;
 }
 
 .battlefield .unit-token .token-shape {
@@ -3067,49 +3069,33 @@ body {
   border: 1px solid var(--line);
 }
 
-/* Battle units use compact information cards inside the existing 4x4 grid. */
+/* Units are pieces on a board, not cards. The shape carries team and role, and
+   the cell is the container -- so the token itself has no chrome of its own. */
 .battlefield .unit-card.unit-token {
   position: relative;
   display: grid;
-  place-items: stretch;
-  grid-template-rows: 42px 25px minmax(0, 1fr) 12px;
+  place-items: center;
+  grid-template-rows: 10px 52px 12px 5px 9px 11px;
+  gap: 2px;
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: 4px;
-  overflow: hidden;
+  padding: 3px 4px 4px;
+  overflow: visible;
   color: var(--text);
-  text-align: left;
-  background: #fff;
-  border: 1px solid #aaa39a;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(51, 45, 38, 0.12);
+  text-align: center;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-.battlefield .unit-card.unit-token.ally {
-  border-top: 3px solid #2a6795;
-}
-
-.battlefield .unit-card.unit-token.enemy {
-  border-top: 3px solid #a83228;
-}
-
-.battlefield .unit-card.unit-token.player {
-  border-color: #9a6a12;
-  border-top-width: 3px;
-}
-
-.battlefield .unit-card.unit-token.selected {
-  outline: 2px solid #c58b1b;
-  outline-offset: -2px;
-}
-
+/* The ultimate meter rings the token's own outline -- a circle for allies, the
+   rotated square for enemies -- instead of boxing the whole cell like a card. */
 .battlefield .unit-card.unit-token .ultimate-border {
   position: absolute;
-  inset: 0;
+  inset: -5px;
   z-index: 3;
-  width: 100%;
-  height: 100%;
   overflow: visible;
   pointer-events: none;
 }
@@ -3118,10 +3104,16 @@ body {
   fill: none;
   vector-effect: non-scaling-stroke;
   stroke-width: 3px;
+  rx: 6px;
+}
+
+.battlefield .unit-card.unit-token.ally .ultimate-border rect {
+  rx: 50px;
 }
 
 .battlefield .unit-card.unit-token .ultimate-border-track {
-  stroke: #c4beb5;
+  stroke: rgba(150, 141, 128, 0.35);
+  stroke-width: 2px;
 }
 
 .battlefield .unit-card.unit-token .ultimate-border-fill {
@@ -3145,139 +3137,26 @@ body {
   filter: drop-shadow(0 0 2px rgba(181, 54, 44, 0.72));
 }
 
-.battle-card-head {
-  min-width: 0;
-  padding-right: 47px;
-}
 
-.battle-card-head span,
-.battle-card-health span,
-.battle-card-conditions > span,
-.battle-card-target > span {
-  display: block;
-  font-size: 6px;
-  line-height: 1.1;
-  color: var(--muted);
-  text-transform: uppercase;
-}
 
-.battle-card-head strong {
-  display: block;
-  overflow: hidden;
-  font-size: 11px;
-  line-height: 1.05;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
-.battle-card-head small {
-  display: block;
-  overflow: hidden;
-  font-size: 6px;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
-.battle-card-target {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  width: 45px;
-  min-height: 36px;
-  padding: 3px;
-  overflow: hidden;
-  background: #f3f1ed;
-  border: 1px solid #c9c4bc;
-  border-radius: 3px;
-}
 
-.battle-card-target strong,
-.battle-card-target small {
-  display: block;
-  overflow: hidden;
-  font-size: 6px;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
-.battle-card-target > div {
-  height: 3px;
-  margin: 2px 0;
-  overflow: hidden;
-  background: #d8d4cd;
-}
 
-.battle-card-target > div i {
-  display: block;
-  height: 100%;
-  background: #a83228;
-}
 
-.battle-card-health {
-  min-width: 0;
-}
 
-.battle-card-health > strong {
-  float: right;
-  margin-top: -7px;
-  font-size: 7px;
-}
 
-.battle-card-health .hp-bar {
-  box-sizing: border-box;
-  width: calc(100% - 8px);
-  height: 7px;
-  margin: 3px auto 0;
-  overflow: hidden;
-  background: #dedbd5;
-  border: 1px solid #c9c4bc;
-}
 
-.battle-card-health .hp-bar i {
-  display: block;
-  height: 100%;
-  background: #397652;
-}
 
-.battlefield .unit-card.unit-token.enemy .battle-card-health .hp-bar i {
-  background: #a83228;
-}
 
-.battle-card-conditions {
-  min-height: 0;
-  padding: 3px;
-  overflow: hidden;
-  background: #f7f6f3;
-  border: 1px solid #d8d4cd;
-}
 
-.battle-card-conditions div {
-  display: grid;
-  gap: 1px;
-  margin-top: 2px;
-}
 
-.battle-card-conditions small {
-  overflow: hidden;
-  font-size: 6px;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
-.battlefield .unit-card.unit-token .token-pips {
-  position: absolute;
-  right: 3px;
-  bottom: 2px;
-  display: flex;
-  gap: 1px;
-}
 
 .battlefield .unit-card.unit-token .cast-track {
   position: relative;
-  grid-row: 4;
+  grid-row: 6;
   width: 100%;
   min-width: 0;
 }
@@ -3700,27 +3579,9 @@ body:has(#battleScreen:not(.hidden)) .app-shell {
   display: none;
 }
 
-#battleScreen .battle-card-head span,
-#battleScreen .battle-card-health span,
-#battleScreen .battle-card-conditions > span,
-#battleScreen .battle-card-target > span {
-  font-size: 9px;
-}
 
-#battleScreen .battle-card-head strong {
-  font-size: 14px;
-}
 
-#battleScreen .battle-card-head small,
-#battleScreen .battle-card-target strong,
-#battleScreen .battle-card-target small,
-#battleScreen .battle-card-conditions small {
-  font-size: 10px;
-}
 
-#battleScreen .battle-card-health > strong {
-  font-size: 11px;
-}
 
 #battleScreen .battle-action-row .target-panel > span,
 #battleScreen .battle-action-row .target-detail {
@@ -3820,12 +3681,6 @@ body:has(#battleScreen:not(.hidden)) .app-shell {
   font-size: 12px;
 }
 
-#battleScreen .battle-card-health > strong {
-  display: block;
-  float: none;
-  margin: 0 4px 0 0;
-  text-align: right;
-}
 
 #battleScreen .battle-action-row {
   grid-template-columns: 1fr;
@@ -3890,9 +3745,6 @@ body:has(#battleScreen:not(.hidden)) .app-shell {
   min-height: 0;
 }
 
-#battleScreen .battle-card-conditions div {
-  margin-top: 0;
-}
 
 #battleScreen .battlefield-target-panel {
   position: absolute;
@@ -4001,4 +3853,88 @@ body:has(#battleScreen:not(.hidden)) .app-shell {
 
 #battleScreen .battle-action-row .ability-button small {
   font-size: 12px;
+}
+
+/* Compact battle heading: encounter, title, and controls share one row. */
+#battleScreen .combat-topbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+  min-height: 28px;
+  align-items: center;
+}
+
+#battleScreen .combat-topbar > div:first-child {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+}
+
+#battleScreen .combat-topbar .eyebrow {
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: 10px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#battleScreen .combat-topbar h1 {
+  min-width: 0;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1;
+}
+
+#battleScreen .combat-topbar .run-track {
+  display: none;
+}
+
+#battleScreen .combat-topbar .topbar-actions {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  flex-basis: auto;
+  gap: 3px;
+}
+
+#battleScreen .combat-topbar .topbar-actions button {
+  min-height: 26px;
+  padding: 0 5px;
+  font-size: 10px;
+}
+
+/* Cards sit inside roomy grid cells so lines and spell pulses stay visible. */
+#battleScreen .battlefield {
+  gap: 12px 10px;
+  padding: 9px 8px;
+}
+
+#battleScreen .battlefield .cell {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  place-items: center;
+}
+
+#battleScreen .battlefield .unit-card.unit-token {
+  width: 90%;
+  min-width: 0;
+  height: 126px;
+  max-height: calc(100% - 14px);
+  min-height: 0;
+  padding: 4px 5px;
+  border: 1px solid var(--line-bright);
+  border-radius: 4px;
+  background: rgba(251, 246, 234, 0.96);
+  box-shadow: 0 4px 10px rgba(62, 48, 30, 0.2);
+}
+
+#battleScreen .battlefield .unit-card.unit-token.enemy {
+  border-color: rgba(168, 50, 40, 0.9);
+}
+
+#battleScreen .battlefield .unit-card.unit-token.ally {
+  border-color: rgba(154, 111, 20, 0.9);
 }
