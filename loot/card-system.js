@@ -133,12 +133,15 @@
   })));
 
   const saved = JSON.parse(localStorage.getItem(saveKey) || "{}");
+  const permanentCollectionKey = `${saveKey}-permanent-collection`;
+  const permanentCollection = JSON.parse(localStorage.getItem(permanentCollectionKey) || "null");
   const collectionVersion = 2;
-  const keepSavedCollection = saved.cardCollectionVersion === collectionVersion;
-  state.cardEquipped = normalizedLoadouts(keepSavedCollection ? saved.cardEquipped : {});
+  state.cardEquipped = normalizedLoadouts(saved.cardEquipped || {});
   state.ultimateChargeByRole = saved.ultimateChargeByRole || {};
   state.craftingCurrency = { Common: 0, Uncommon: 0, Rare: 0, Epic: 0, Legendary: 0, ...(saved.craftingCurrency || {}) };
-  const oldCollection = keepSavedCollection && Array.isArray(saved.collection) ? saved.collection : [];
+  const oldCollection = Array.isArray(permanentCollection)
+    ? permanentCollection
+    : Array.isArray(saved.collection) ? saved.collection : [];
   const starterCards = new Set(["iron-mace", "guard-shield", "charge", "last-bastion"]);
   state.collection = allCards.map((card) => {
     const owned = oldCollection.find((entry) => entry.itemId === card.id);
@@ -146,6 +149,7 @@
   }).filter((entry) => entry.quantity > 0);
 
   saveGame = function saveCardGame() {
+    localStorage.setItem(permanentCollectionKey, JSON.stringify(state.collection));
     localStorage.setItem(saveKey, JSON.stringify({
       collection: state.collection,
       equipped: state.equipped,
