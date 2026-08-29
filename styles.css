@@ -1444,6 +1444,22 @@ h2 {
   background: rgba(242, 240, 237, 0.48);
 }
 
+.ability-button .global-cooldown-fill {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  height: 0;
+  pointer-events: none;
+  background: rgba(201, 149, 37, 0.24);
+  border-top: 2px solid rgba(201, 149, 37, 0.9);
+  box-shadow: 0 -2px 7px rgba(201, 149, 37, 0.38);
+  transition: height 90ms linear;
+}
+
+.ability-button.global-cooldown {
+  border-color: rgba(154, 111, 20, 0.72);
+}
+
 .ability-button:disabled {
   color: #342a1d;
   cursor: default;

@@ -1060,12 +1060,12 @@ function roleChoiceCard(roleId, selectionRoleId = roleId, inParty = false) {
   const role = roles[roleId];
   const icons = { tank: "🛡️", healer: "✨", dps: "⚔️" };
   const isPlayerChoice = state.selectedRole === selectionRoleId;
-  const ownerLabel = isPlayerChoice ? "You" : inParty ? "Ally" : "Available";
+  const ownerLabel = isPlayerChoice ? "You" : inParty ? "Ally" : "";
   const button = document.createElement("button");
   button.className = `role-choice-card ${isPlayerChoice ? "selected" : inParty ? "party-member" : "not-selected"}`;
   button.type = "button";
   button.innerHTML = `
-    <div class="unit-card-owner">${ownerLabel}</div>
+    ${ownerLabel ? `<div class="unit-card-owner">${ownerLabel}</div>` : ""}
     <div class="role-choice-title">
       <span aria-hidden="true">${icons[roleId] || "✦"}</span>
       <strong>${role.name}</strong>
@@ -2618,20 +2618,34 @@ function renderAbilityBar() {
                               : !inAbilityRange(player, ability, abilityTarget);
     const armed = state.pendingReposition?.abilityId === ability.id;
     const button = document.createElement("button");
-    button.className = `ability-button ${outOfRange ? "out-of-range" : ""} ${armed ? "armed" : ""}`;
+    button.className = `ability-button ${outOfRange ? "out-of-range" : ""} ${armed ? "armed" : ""} ${player.gcd > 0 ? "global-cooldown" : ""}`;
     button.type = "button";
     button.disabled = !state.combatActive || player.dead || cooldown > 0 || player.gcd > 0 || !!player.cast || !!state.result || outOfRange;
-    const readyLabel = armed
-      ? "Pick a square"
-      : outOfRange
-        ? (isStep ? "Nowhere to go" : `Out of range (${abilityRange(ability)})`)
-        : ability.castTime ? `${ability.castTime}s cast` : isStep ? `Move ${repositionRange(player, ability)}` : "Ready";
+    const readyLabel = player.cast
+      ? `Casting ${player.cast.name}`
+      : player.gcd > 0
+        ? `Recover ${player.gcd.toFixed(1)}s`
+        : armed
+          ? "Pick a square"
+          : outOfRange
+            ? (isStep ? "Nowhere to go" : `Out of range (${abilityRange(ability)})`)
+            : ability.castTime ? `${ability.castTime}s cast` : isStep ? `Move ${repositionRange(player, ability)}` : "Ready";
     button.innerHTML = `
       <div class="cooldown-fill" style="height:${Math.min(100, (cooldown / maxCooldown) * 100)}%"></div>
+      <div class="global-cooldown-fill" style="height:${Math.min(100, player.gcd * 100)}%"></div>
       <strong>${index + 1}. ${ability.name}</strong>
       <small>${cooldown > 0 ? `${cooldown.toFixed(1)}s` : readyLabel}</small>
     `;
-    button.addEventListener("click", () => useAbilityByIndex(index));
+    // Fire on pointer-down so the frequently refreshed action bar cannot replace
+    // the button between a phone touch-down and its delayed click event.
+    button.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      useAbilityByIndex(index);
+    });
+    // Preserve keyboard activation without firing a second time for pointers.
+    button.addEventListener("click", (event) => {
+      if (event.detail === 0) useAbilityByIndex(index);
+    });
     ui.abilityBar.append(button);
   });
 }
