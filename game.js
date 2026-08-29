@@ -1,4 +1,5 @@
 const saveKey = "card-combat-rpg-v1";
+const permanentCollectionKey = `${saveKey}-permanent-collection`;
 
 // Range is Chebyshev distance on the grid, measured cell-to-cell.
 // 1 = must be adjacent, 2 = one rank back, 3 = anywhere on the board.
@@ -764,13 +765,26 @@ const state = {
 
 function loadSave() {
   const saved = JSON.parse(localStorage.getItem(saveKey) || "{}");
-  state.collection = Array.isArray(saved.collection) ? saved.collection : [];
+  const permanentCollection = JSON.parse(localStorage.getItem(permanentCollectionKey) || "null");
+  state.collection = Array.isArray(permanentCollection)
+    ? permanentCollection
+    : Array.isArray(saved.collection) ? saved.collection : [];
+  const securedCounts = (saved.run?.secured || []).reduce((counts, itemId) => {
+    counts[itemId] = (counts[itemId] || 0) + 1;
+    return counts;
+  }, {});
+  Object.entries(securedCounts).forEach(([itemId, quantity]) => {
+    const owned = state.collection.find((entry) => entry.itemId === itemId);
+    if (owned) owned.quantity = Math.max(owned.quantity, quantity);
+    else state.collection.push({ itemId, quantity });
+  });
   state.equipped = saved.equipped || {};
   state.selectedRole = saved.selectedRole || null;
   state.run = isValidRun(saved.run) ? saved.run : null;
 }
 
 function saveGame() {
+  localStorage.setItem(permanentCollectionKey, JSON.stringify(state.collection));
   localStorage.setItem(saveKey, JSON.stringify({
     collection: state.collection,
     equipped: state.equipped,
@@ -1455,12 +1469,17 @@ function randomEntry(list) {
 }
 
 function randomBossAddEntry() {
-  const choices = [
-    { roleId: "healer", name: "Boss Acolyte", positionKey: "enemyHealer" },
-    { roleId: "dps", name: "Boss Blade", positionKey: "enemyDamageFrontB" },
-    { roleId: "caster", name: "Boss Hexer", positionKey: "enemyDamageBackA" },
-    { roleId: "hunter", name: "Boss Archer", positionKey: "enemyDamageBackB" }
-  ];
+  const variants = {
+    dps: { roleId: "dps", name: "Boss Blade", positionKey: "enemyDamageFrontB" },
+    caster: { roleId: "caster", name: "Boss Hexer", positionKey: "enemyDamageBackA" },
+    hunter: { roleId: "hunter", name: "Boss Archer", positionKey: "enemyDamageBackB" },
+    healer: { roleId: "healer", name: "Boss Acolyte", positionKey: "enemyHealer" },
+    tank: { roleId: "tank", name: "Boss Guard", positionKey: "enemyTank" }
+  };
+  // Reinforcements default to damage roles. A bespoke encounter must explicitly
+  // opt into a healer or tank through respawnAdds.allowedAddRoles.
+  const allowedRoles = currentEncounter().respawnAdds?.allowedAddRoles || ["dps", "caster", "hunter"];
+  const choices = allowedRoles.map((roleId) => variants[roleId]).filter(Boolean);
   return { ...randomEntry(choices), slotKey: "bossAdd", hpMultiplier: 1 };
 }
 
