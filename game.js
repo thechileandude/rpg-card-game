@@ -605,7 +605,6 @@ const encounterLibrary = {
     enrage: { firstAt: 22, interval: 24, castTime: 2.8, castName: "Crown of Fury", multiplier: 2, sourceName: "The Warren King" },
     enemies: [
       { roleId: "caster", name: "Warren Vizier", slotKey: "enemyDamageA", positionKey: "enemyDamageBackA", hpMultiplier: 1.1 },
-      { roleId: "healer", name: "Warren Bonemender", slotKey: "enemyHealer", hpMultiplier: 1.25 },
       { roleId: "hunter", name: "Kingsguard Archer", slotKey: "enemyDamageB", positionKey: "enemyDamageBackC", hpMultiplier: 1.05 },
       { roleId: "tank", name: "The Warren King", slotKey: "enemyBoss", positionKey: "enemyBoss", width: 2, hpMultiplier: 1.4 }
     ]
@@ -758,6 +757,7 @@ const state = {
   squareAttacks: [],
   respawnQueue: [],
   floaters: [],
+  tankAutoPulses: [],
   enrageTimer: 0,
   fightElapsed: 0,
   softEnrageStacks: 0
@@ -971,7 +971,7 @@ function repositionTargets(unit, ability) {
   for (let row = 0; row < gridRows; row += 1) {
     for (let col = 0; col < gridCols; col += 1) {
       if (Math.max(Math.abs(row - unit.position.row), Math.abs(col - unit.position.col)) > reach) continue;
-      if (row === unit.position.row && col === unit.position.col) continue;
+      if (row === unit.position.row && col === unit.position.col && !ability.allowStay) continue;
       if (ability.ignoreZones) {
         if (!canOccupy(unit, row, col)) continue;
       } else if (!canOccupyForRole(unit, row, col)) continue;
@@ -1005,7 +1005,17 @@ function resolvePendingReposition(row, col) {
   unit.gcd = 1;
   unit.cooldowns[ability.id] = modifiedCooldown(unit, ability);
   unit.position = { row, col };
-  showFloatingMessage(unit, ability.name.toUpperCase());
+  if (ability.tauntRadius) {
+    const nearby = enemiesOf(unit).filter((enemy) => unitDistance(unit, enemy) <= ability.tauntRadius);
+    nearby.forEach((enemy) => {
+      enemy.forcedTargetId = unit.id;
+      enemy.forcedTargetTimer = ability.tauntDuration || 4;
+      enemy.targetId = unit.id;
+    });
+    showFloatingMessage(unit, nearby.length ? `TAUNTED ${nearby.length}` : "NO ENEMIES NEARBY");
+  } else {
+    showFloatingMessage(unit, ability.name.toUpperCase());
+  }
   renderBattle();
   return true;
 }
@@ -1227,6 +1237,8 @@ function createUnit(roleId, team, name, slotKey, hpMultiplier = 1, positionKey =
     interruptMessageTimer: 0,
     targetId: null,
     tauntTimer: 0,
+    forcedTargetId: null,
+    forcedTargetTimer: 0,
     guardTimer: 0,
     guardMitigation: 0.5,
     hitFlash: 0,
@@ -1563,6 +1575,8 @@ function chooseEnemyTarget(unit) {
   const enemies = enemiesOf(unit);
   const activeEnemies = enemies.filter((enemy) => enemy.enemyBarrierTimer <= 0);
   const targetPool = activeEnemies.length ? activeEnemies : enemies;
+  const personallyForced = unit.forcedTargetTimer > 0 ? unitById(unit.forcedTargetId) : null;
+  if (personallyForced && !personallyForced.dead) return personallyForced;
   const forcedTank = enemies.find((enemy) => enemy.roleId === "tank" && enemy.tauntTimer > 0);
   if (forcedTank) return forcedTank;
   // Someone in our half turns the bruisers around — the front line notices the
@@ -1655,6 +1669,8 @@ function tickFeedback(dt) {
     if (unit.hitFlash > 0) unit.hitFlash = Math.max(0, unit.hitFlash - dt);
     if (unit.healFlash > 0) unit.healFlash = Math.max(0, unit.healFlash - dt);
   });
+  state.tankAutoPulses.forEach((pulse) => { pulse.remaining -= dt; });
+  state.tankAutoPulses = state.tankAutoPulses.filter((pulse) => pulse.remaining > 0);
 }
 
 function floatersFor(unitId) {
@@ -2048,7 +2064,17 @@ function processAuto(unit) {
   if (!target || !inAutoRange(unit, target)) return;
   unit.targetId = target.id;
   if (auto.type === "heal") heal(unit, target, auto.amount + unit.stats.autoHealing);
-  else damage(unit, target, enemyAutoDamageAmount(unit, auto));
+  else {
+    if (unit.roleId === "tank") {
+      state.tankAutoPulses.push({
+        sourceId: unit.id,
+        targetId: target.id,
+        remaining: 0.34,
+        duration: 0.34
+      });
+    }
+    damage(unit, target, enemyAutoDamageAmount(unit, auto));
+  }
 }
 
 function dangerousCastTarget(unit) {
@@ -2329,6 +2355,8 @@ function updateCombat(dt) {
     unit.gcd = Math.max(0, unit.gcd - dt);
     unit.moveTimer = Math.max(0, (unit.moveTimer ?? 0) - dt);
     unit.tauntTimer = Math.max(0, unit.tauntTimer - dt);
+    unit.forcedTargetTimer = Math.max(0, (unit.forcedTargetTimer || 0) - dt);
+    if (unit.forcedTargetTimer <= 0) unit.forcedTargetId = null;
     unit.guardTimer = Math.max(0, unit.guardTimer - dt);
     // Dive window expires on its own if you never spend the follow-up.
     if (unit.diveHome) {
@@ -2442,7 +2470,7 @@ function renderBattlefield() {
       const unit = state.units.find((candidate) => candidate.position.row === row && candidate.position.col === col) || null;
       const squareAttack = squareAttackAt(row, col);
       const respawn = respawnAt(row, col);
-      const canMoveHere = !unit && repositionCells.some((c) => c.row === row && c.col === col);
+      const canMoveHere = (!unit || unit.id === pendingUnit?.id) && repositionCells.some((c) => c.row === row && c.col === col);
       const wide = unit && unitWidth(unit) > 1;
       cell.className = `cell ${wide ? "cell-wide" : ""} ${squareAttack ? "danger-square" : ""} ${respawn ? "respawn-square" : ""} ${canMoveHere ? "move-square" : ""}`;
       if (squareAttack) {
@@ -2620,6 +2648,16 @@ function renderLines() {
     const d = routePath(source, target);
     paths.push(`<path class="healing-grid-pulse-glow" pathLength="100" stroke-dasharray="12 100" stroke-dashoffset="${offset}" d="${d}"></path>`);
     paths.push(`<path class="healing-grid-pulse" pathLength="100" stroke-dasharray="7 105" stroke-dashoffset="${offset}" d="${d}"></path>`);
+  });
+  state.tankAutoPulses.forEach((pulse) => {
+    const source = unitById(pulse.sourceId);
+    const target = unitById(pulse.targetId);
+    if (!source || !target) return;
+    const progress = Math.max(0, Math.min(1, 1 - pulse.remaining / pulse.duration));
+    const offset = 110 - progress * 110;
+    const d = routePath(source, target);
+    paths.push(`<path class="tank-auto-pulse-glow" pathLength="100" stroke-dasharray="11 100" stroke-dashoffset="${offset}" d="${d}"></path>`);
+    paths.push(`<path class="tank-auto-pulse" pathLength="100" stroke-dasharray="5 105" stroke-dashoffset="${offset}" d="${d}"></path>`);
   });
   ui.targetLines.innerHTML = paths.join("");
 }

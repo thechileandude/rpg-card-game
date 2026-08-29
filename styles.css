@@ -3750,6 +3750,24 @@ body:has(#battleScreen:not(.hidden)) .app-shell {
   height: 100%;
 }
 
+.target-lines path.tank-auto-pulse-glow,
+.target-lines path.tank-auto-pulse {
+  fill: none;
+  pointer-events: none;
+  stroke-linecap: round;
+}
+
+.target-lines path.tank-auto-pulse-glow {
+  stroke: rgba(255, 226, 133, 0.72);
+  stroke-width: 8px;
+  filter: drop-shadow(0 0 5px rgba(224, 167, 39, 0.75));
+}
+
+.target-lines path.tank-auto-pulse {
+  stroke: #fff8d2;
+  stroke-width: 3px;
+}
+
 #battleScreen .battlefield {
   grid-template-rows: repeat(4, minmax(0, 1fr));
   align-content: stretch;
@@ -3923,6 +3941,8 @@ body:has(#battleScreen:not(.hidden)) .app-shell {
 #battleScreen .battlefield {
   gap: 12px 10px;
   padding: 9px 8px;
+  background:
+    linear-gradient(to bottom, rgba(248, 233, 229, 0.78) 0 50%, rgba(237, 245, 230, 0.78) 50% 100%);
 }
 
 #battleScreen .battlefield .cell {

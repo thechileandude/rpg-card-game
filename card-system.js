@@ -30,7 +30,7 @@
   };
   const interactionRules = {
     "iron-mace": "Combo — Crushing Blow stuns an Exposed target for 2s.",
-    charge: "Setup — Charge applies Exposed for 5s.",
+    charge: "Move — Choose a space up to 2 away, then taunt adjacent enemies for 4s. Stay to taunt in place.",
     "guard-shield": "Choice — Shield links an ally or bashes an adjacent enemy.",
     "dawn-staff": "Payoff — Mend heals 8 more on a protected ally.",
     "acolytes-tome": "Trigger — Purify gains 10 Ultimate charge when it removes a condition.",
@@ -77,7 +77,7 @@
   function toAbility(raw, card) {
     const typeMap = {
       "crushing-blow": "damage", "concussive-strike": "damage", "shield-wall": "guard", protect: "protect",
-      charge: "charge", "last-bastion": "lastBastion", mend: "heal", renewal: "renewal",
+      charge: "reposition", "last-bastion": "lastBastion", mend: "heal", renewal: "renewal",
       barrier: "allyBarrier", purify: "purify", rescue: "rescue", "divine-intervention": "divineIntervention",
       lunge: "damage", cleave: "cleave", pummel: "damage", riposte: "riposte", pursuit: "pursuit",
       whirlwind: "whirlwind", "aimed-shot": "damage", volley: "rowDamage", "pinning-shot": "damage",
@@ -100,8 +100,9 @@
     if (raw.moveRange !== undefined && raw.target === "enemy") ability.range = raw.moveRange;
     if (["damage", "cleave"].includes(ability.type) && ability.range === undefined) ability.range = ["tank", "melee"].includes(card.role) ? 1 : 3;
     if (ability.type === "reposition") {
-      ability.moveRange = 3;
-      ability.ignoreZones = false;
+      ability.moveRange = raw.moveRange ?? 3;
+      ability.ignoreZones = raw.id === "charge";
+      ability.allowStay = raw.allowStay || false;
     }
     return ability;
   }
